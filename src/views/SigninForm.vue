@@ -32,16 +32,26 @@ export default defineComponent({
     }
   },
   methods: {
-    handleSubmit() {
-      axios.post(`${process.env.VUE_APP_ROOT_API}/auth/signin`, {
-        email: this.email,
-        password: this.password
-      })
+    async handleSubmit() {
+      try {
+        const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/auth/signin`, {
+          email: this.email,
+          password: this.password
+        })
+        
+        const accessToken = response.data.accessToken
 
-      .then((res: any) => console.log(res))
-      .catch((error: any) => console.log(error))
-      this.email = ''
-      this.password = ''
+        if (!accessToken) {
+          this.$router.push('/signin')
+        }
+
+        localStorage.setItem('token', accessToken)
+        console.log(`Hello, ${response.data.username}`)
+        this.$router.push('/')
+
+      } catch(error: any) {
+        console.log(error.response.data.message)
+      }
     }
   }
 });
