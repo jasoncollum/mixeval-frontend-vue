@@ -21,7 +21,7 @@ export default defineComponent({
   computed: {
     username() {
       return this.$store.state.username
-    }
+    },
   },
   methods: {
     logout() {
@@ -29,7 +29,7 @@ export default defineComponent({
       localStorage.removeItem('user_name')
       this.$store.commit('logoutUser')
       this.$router.push('/signin')
-    }
+    },
   },
 })
 </script>
