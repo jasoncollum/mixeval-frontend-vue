@@ -49,6 +49,7 @@ export default defineComponent({
         }
 
         localStorage.setItem('token', accessToken)
+        localStorage.setItem('user_name', response.data.username)
         this.updateUsername(response.data.username)
         this.$router.push('/')
 

@@ -9,6 +9,9 @@ const store = createStore({
   mutations: {
     updateUsername(state, payload) {
       state.username = payload
+    },
+    logoutUser(state) {
+      state.username = null
     }
   },
   actions: {

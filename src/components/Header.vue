@@ -6,7 +6,8 @@
     <div class="navbar-menu">
       <div class="navbar-end">
         <router-link to="/signin" class="navbar-item" v-if="!username">Log In</router-link>
-        <router-link to="/" class="navbar-item" v-else>{{username}}</router-link>
+        <router-link to="" class="navbar-item" @click="logout" v-else>Log Out</router-link>
+        <router-link to="/" class="navbar-item" v-if="username">{{username}}</router-link>
       </div>
     </div>
   </nav>
@@ -21,7 +22,15 @@ export default defineComponent({
     username() {
       return this.$store.state.username
     }
-  }
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user_name')
+      this.$store.commit('logoutUser')
+      this.$router.push('/signin')
+    }
+  },
 })
 </script>
 
