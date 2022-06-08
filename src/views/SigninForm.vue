@@ -17,7 +17,7 @@
   </form>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
 
 const axios = require('axios').default;
@@ -32,6 +32,9 @@ export default defineComponent({
     }
   },
   methods: {
+    updateUsername(username) {
+      this.$store.commit('updateUsername', username)
+    },
     async handleSubmit() {
       try {
         const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/auth/signin`, {
@@ -46,10 +49,10 @@ export default defineComponent({
         }
 
         localStorage.setItem('token', accessToken)
-        console.log(`Hello, ${response.data.username}`)
+        this.updateUsername(response.data.username)
         this.$router.push('/')
 
-      } catch(error: any) {
+      } catch(error) {
         console.log(error.response.data.message)
       }
     }
