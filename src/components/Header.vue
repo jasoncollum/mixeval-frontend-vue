@@ -4,9 +4,9 @@
       <router-link to="/" class="navbar-item">MIXEVAL</router-link>
     </div>
     <div class="navbar-menu">
-      <div class="navbar-end">
-        <router-link to="" class="navbar-item" @click="logout" v-if="username">Log Out</router-link>
-        <router-link to="/" class="navbar-item" v-if="username">{{username}}</router-link>
+      <div class="navbar-end" v-if="username">
+        <router-link to="" class="navbar-item" @click="logout">Log Out</router-link>
+        <router-link to="/" class="navbar-item">{{username}}</router-link>
       </div>
     </div>
   </nav>
