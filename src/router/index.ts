@@ -7,7 +7,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path:'/signin',
@@ -24,6 +27,17 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const authenticatedUser = localStorage.getItem('user_name')
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  if (requiresAuth && !authenticatedUser) {
+    next('signin')
+  } else {
+    next()
+  }
 })
 
 export default router
