@@ -1,14 +1,21 @@
 <template>
   <Header />
-  <router-view />
+  <Sidebar />
+  <div id="views">
+    <router-view />
+  </div>
 </template>
 
 <script>
 import Header from './components/Header.vue'
+import Sidebar from './components/Sidebar.vue'
 
 export default {
   name: 'App',
-  components: {Header},
+  components: {
+    Header, 
+    Sidebar,
+  },
 }
 </script>
 
@@ -19,5 +26,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+#views {
+  margin-left: 225px;
+  padding-top: 100px;
 }
 </style>

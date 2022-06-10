@@ -1,12 +1,11 @@
 <template>
-  <nav class="navbar is-transparent">
+  <nav class="navbar is-transparent is-fixed-top">
     <div class="navbar-brand">
       <router-link to="/" class="navbar-item">MIXEVAL</router-link>
     </div>
     <div class="navbar-menu">
       <div class="navbar-end">
         <router-link to="" class="navbar-item" @click="logout" v-if="username">Log Out</router-link>
-        <router-link to="/" class="navbar-item" v-if="username">{{username}}</router-link>
       </div>
     </div>
   </nav>
@@ -34,5 +33,7 @@ export default defineComponent({
 </script>
 
 <style>
-
+.navbar {
+  border-bottom: 1px solid lightgray;
+}
 </style>

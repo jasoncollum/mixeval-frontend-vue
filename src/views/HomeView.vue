@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div id="home">
     Getting started with MIXEVAL Frontend using Vue
   </div>
 </template>
@@ -11,3 +11,7 @@ export default defineComponent({
   name: 'HomeView',
 });
 </script>
+
+<style>
+  
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <h1>Sign Up</h1>
+  <!-- Sign Up -->
   <form @submit.prevent="handleSubmit">
     <label>Username:</label>
     <input type="text" required v-model="username" />

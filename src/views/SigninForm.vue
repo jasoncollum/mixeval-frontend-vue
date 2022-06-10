@@ -1,5 +1,5 @@
 <template>
-  <h1>Sign In</h1>
+  <!-- Sign In -->
   <form @submit.prevent="handleSubmit">
     <label>Email:</label>
     <input type="email" required v-model="email" />
