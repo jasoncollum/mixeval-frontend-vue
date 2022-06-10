@@ -26,6 +26,7 @@ const store = createStore({
     },
     logoutUser(state) {
       state.username = null
+      state.artists = []
     }
   },
   actions: {

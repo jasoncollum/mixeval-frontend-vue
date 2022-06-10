@@ -28,7 +28,7 @@ export default {
   color: #2c3e50;
 }
 #views {
-  margin-left: 225px;
+  margin-left: 275px;
   padding-top: 100px;
 }
 </style>

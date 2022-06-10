@@ -42,15 +42,11 @@ export default defineComponent({
           password: this.password
         })
         
-        const accessToken = response.data.accessToken
-
-        if (!accessToken) {
-          this.$router.push('/signin')
-        }
+        const { accessToken, username } = response.data
 
         localStorage.setItem('token', accessToken)
-        localStorage.setItem('user_name', response.data.username)
-        this.updateUsername(response.data.username)
+        localStorage.setItem('user_name', username)
+        this.updateUsername(username)
         this.$router.push('/')
 
       } catch(error) {
