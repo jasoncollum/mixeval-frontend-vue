@@ -23,8 +23,6 @@ export default defineComponent({
   },
   methods: {
     logout() {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user_name')
       this.$store.commit('logoutUser')
       this.$router.push('/signin')
     },

@@ -1,14 +1,16 @@
 <template>
   <div class="card-container">
-    <img v-if="imageUrl" :src="imageUrl" />
-    <img v-else src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
+    <!-- <img v-if="imageUrl" :src="imageUrl" />
+    <img v-else src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" /> -->
+    <!-- temporary image url -->
+    <img src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
     <div v-if="songName" class="details">
       <h4>{{songName}}</h4>
       <p>{{artistName}}</p>
     </div>
     <div v-else class="details">
       <p>{{artistName}}</p>
-      <p class="content is-small">{{artistName}}</p>
+      <p class="content is-small">{{artistSongNumber}} Songs</p>
     </div>
   </div>
 </template>
@@ -16,7 +18,7 @@
 <script>
 export default {
   name: 'ArtistSongCard',
-  props: ['imageUrl', 'artistName', 'songName']
+  props: ['imageUrl', 'artistName', 'songName', 'artistSongNumber']
 }
 </script>
 

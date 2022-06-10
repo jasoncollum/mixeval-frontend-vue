@@ -14,9 +14,10 @@
     <div>
       <ArtistSongCard 
         v-for="artist in artists" 
-        :key="artist.name" 
+        :key="artist.id" 
         :imageUrl="artist.image_url"
         :artistName="artist.name"
+        :artistSongNumber="artist.songs.length"
       />
     </div>
   </aside>
@@ -36,7 +37,7 @@ export default {
     },
     artists() {
       return this.$store.state.artists
-    }
+    },
   },
 }
 </script>

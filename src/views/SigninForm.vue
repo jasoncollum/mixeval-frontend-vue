@@ -47,11 +47,17 @@ export default defineComponent({
         localStorage.setItem('token', accessToken)
         localStorage.setItem('user_name', username)
         this.updateUsername(username)
-        this.$router.push('/')
-
       } catch(error) {
         console.log(error.response.data.message)
       }
+
+      try {
+        await this.$store.dispatch('getArtistsWithOpenSongs')
+      } catch (error) {
+        console.log(error.response.data.message)
+      }
+
+      this.$router.push('/')
     }
   }
 });
