@@ -17,13 +17,11 @@
       <div class="top-panel-item">Artists | Songs</div>
     </div>
     <!-- artist | song card container -->
-    <div v-if="artists">
+    <div v-if="Array.isArray(artists)">
       <ArtistSongCard 
         v-for="artist in artists" 
         :key="artist.id" 
-        :imageUrl="artist.image_url"
-        :artistName="artist.name"
-        :artistSongCount="artist.songs.length"
+        :artistName="artist.name"       
       />
     </div>
   </aside>
@@ -31,6 +29,7 @@
 
 <script>
 import ArtistSongCard from './ArtistSongCard.vue'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Sidebar',
@@ -41,9 +40,9 @@ export default {
     username() {
       return this.$store.state.username
     },
-    artists() {
-      return this.$store.state.artists
-    },
+    ...mapGetters([
+      'artists',
+    ])
   },
 }
 </script>

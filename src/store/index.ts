@@ -1,14 +1,19 @@
 import { createStore } from 'vuex'
-import createPesistedState from 'vuex-persistedstate'
+
 const axios = require('axios').default;
 
 const store = createStore({
   state: {
-    username: localStorage.getItem('user_name'),
+    username: localStorage.getItem('username'),
     artists: localStorage.getItem('artists')
   },
   getters: {    
-  
+    artists(state) {
+      if (typeof(state.artists) === 'string') {
+        return JSON.parse(state.artists)
+      }
+      return state.artists
+    }
   },
   mutations: {
     updateUsername(state, payload) {
@@ -32,13 +37,13 @@ const store = createStore({
           }
         }
       )
-      const artists = response.data
+      const artists = JSON.stringify(response.data)
       context.commit('setArtists', artists)
+      localStorage.setItem('artists', artists)
     }
   },
   modules: {
   },
-  plugins: [createPesistedState()],
 })
 
 export default store;
