@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import createPesistedState from 'vuex-persistedstate'
 const axios = require('axios').default;
 
 const store = createStore({
@@ -14,11 +15,9 @@ const store = createStore({
       state.username = payload
     },
     logoutUser(state) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user_name')
-      localStorage.removeItem('artists')
       state.username = null
       state.artists = null
+      localStorage.clear()
     },
     setArtists(state, payload) {
       state.artists = payload
@@ -35,11 +34,11 @@ const store = createStore({
       )
       const artists = response.data
       context.commit('setArtists', artists)
-      localStorage.setItem('artists', JSON.stringify(artists))
     }
   },
   modules: {
-  }
+  },
+  plugins: [createPesistedState()],
 })
 
 export default store;

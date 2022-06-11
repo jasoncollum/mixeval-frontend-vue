@@ -10,7 +10,11 @@
     </div>
     <div v-else class="details">
       <p>{{artistName}}</p>
-      <p class="content is-small">{{artistSongNumber}} Songs</p>
+      <p class="content is-small">
+        {{artistSongCount}}
+        <span v-if="artistSongCount === 1">Song</span>
+        <span v-else>Songs</span>
+      </p>
     </div>
   </div>
 </template>
@@ -18,7 +22,7 @@
 <script>
 export default {
   name: 'ArtistSongCard',
-  props: ['imageUrl', 'artistName', 'songName', 'artistSongNumber']
+  props: ['imageUrl', 'artistName', 'songName', 'artistSongCount']
 }
 </script>
 

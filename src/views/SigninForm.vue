@@ -43,9 +43,8 @@ export default defineComponent({
         })
         
         const { accessToken, username } = response.data
-
         localStorage.setItem('token', accessToken)
-        localStorage.setItem('user_name', username)
+  
         this.updateUsername(username)
       } catch(error) {
         console.log(error.response.data.message)

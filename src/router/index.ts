@@ -1,17 +1,12 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import UserProfile from '../views/UserProfile.vue'
+import CreateArtist from '../views/CreateArtist.vue'
+import CreateSong from '../views/CreateSong.vue'
 import SignupForm from '../views/SignupForm.vue'
 import SigninForm from '../views/SigninForm.vue'
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView,
-    meta: {
-      requiresAuth: true
-    }
-  },
   {
     path:'/signin',
     name: 'signin',
@@ -21,6 +16,38 @@ const routes: Array<RouteRecordRaw> = [
     path: '/signup',
     name: 'signup',
     component: SignupForm
+  },
+  {
+    path: '/',
+    name: 'home',
+    component: HomeView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/profile',
+    name: 'user-profile',
+    component: UserProfile,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/create-artist',
+    name: 'createArtist',
+    component: CreateArtist,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/create-song',
+    name: 'createSong',
+    component: CreateSong,
+    meta: {
+      requiresAuth: true
+    }
   },
 ]
 

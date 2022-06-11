@@ -2,22 +2,28 @@
   <aside class="menu sidebar">
     <!-- top panel container -->
     <div>
-      <div class="top-panel-item">> {{username}}</div>
+      <div class="top-panel-item">
+        <router-link to="/profile">> {{username}}</router-link>
+      </div>
       <div class="top-panel-item">O Search</div>
-      <div class="top-panel-item">+ Create Artist</div>
-      <div class="top-panel-item">+ Create Song</div>
+      <div class="top-panel-item">
+        <router-link to="/create-artist">+ Create Artist</router-link>
+      </div>
+      <div class="top-panel-item">
+        <router-link to="/create-song">+ Create Song</router-link>
+      </div>
       <hr>
       <div class="top-panel-item">Open Songs</div>
       <div class="top-panel-item">Artists | Songs</div>
     </div>
     <!-- artist | song card container -->
-    <div>
+    <div v-if="artists">
       <ArtistSongCard 
         v-for="artist in artists" 
         :key="artist.id" 
         :imageUrl="artist.image_url"
         :artistName="artist.name"
-        :artistSongNumber="artist.songs.length"
+        :artistSongCount="artist.songs.length"
       />
     </div>
   </aside>
