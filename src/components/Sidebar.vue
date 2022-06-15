@@ -13,15 +13,26 @@
         <router-link to="/create-song">+ Create Song</router-link>
       </div>
       <hr>
-      <div class="top-panel-item">Open Songs</div>
-      <div class="top-panel-item">Artists | Songs</div>
+      <!-- <div class="top-panel-item">Open Songs</div> -->
+      <div class="artists-songs-container">
+        <span @click="listArtists" class="top-panel-item artists-songs-spans">Artists</span> | 
+        <span @click="listSongs" class="top-panel-item artists-songs-spans">Songs</span></div>
     </div>
     <!-- artist | song card container -->
-    <div v-if="artists">
+    <div v-if="selectArtists">
       <ArtistSongCard 
-        v-for="artist in artists" 
+        v-for="artist in artists"
         :key="artist.id" 
-        :artistName="artist.name"       
+        :artistName="artist.name"  
+        :artistSongCount="artist.songs.length"
+      />
+    </div>
+    <div v-else>
+      <ArtistSongCard 
+        v-for="song in songs"
+        :key="song.id" 
+        :songTitle="song.title"
+        :artistName="song.artistName"
       />
     </div>
   </aside>
@@ -36,14 +47,40 @@ export default {
   components: {
     ArtistSongCard,
   },
+  data() {
+    return {
+      selectArtists: true,
+      selectSongs: false,
+    }
+  },
   computed: {
     username() {
       return this.$store.state.username
     },
     ...mapGetters([
       'artists',
-    ])
+    ]),
+    songs() {
+      const songs = []
+      this.artists.forEach(a => {
+        let artist = a
+        a.songs.forEach(song => {
+          songs.push({...song, artistName: artist.name, artistImage: artist.image_url})
+        })
+      })
+      return songs;
+    },
   },
+  methods: {
+    listSongs() {
+      this.selectArtists = false;
+      this.selectSongs = true;
+    },
+    listArtists() {
+      this.selectSongs = false;
+      this.selectArtists = true;
+    }
+  }
 }
 </script>
 
@@ -51,7 +88,8 @@ export default {
 .sidebar {
   position: fixed;    
   height: 100vh;
-  width: 275px;
+  /* width: 275px; */
+  width: 340px;
   padding: 15px 15px 0 15px;
   text-align: left;
   border-right: 1px solid lightgray;
@@ -63,5 +101,13 @@ export default {
 .top-panel-item:hover {
   color: #42b983;
   cursor: pointer;
+}
+.artists-songs-container {
+  display: flex;
+  justify-content: center;
+}
+.artists-songs-spans {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>

@@ -4,17 +4,17 @@
     <img v-else src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" /> -->
     <!-- temporary image url -->
     <img src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
-    <div v-if="songName" class="details">
-      <h4>{{songName}}</h4>
-      <p>{{artistName}}</p>
+    <div v-if="songTitle" class="details">
+      <p class="top-line">{{songTitle}}</p>
+      <p class="content is-small">{{artistName}}</p>
     </div>
     <div v-else class="details">
-      <p>{{artistName}}</p>
-      <!-- <p class="content is-small">
+      <p class="top-line">{{artistName}}</p>
+      <p class="content is-small">
         {{artistSongCount}}
         <span v-if="artistSongCount === 1">Song</span>
         <span v-else>Songs</span>
-      </p> -->
+      </p>
     </div>
   </div>
 </template>
@@ -22,7 +22,7 @@
 <script>
 export default {
   name: 'ArtistSongCard',
-  props: ['artistName', 'songName']
+  props: ['artistName', 'artistSongCount', 'songTitle'],
 }
 </script>
 
@@ -41,5 +41,8 @@ img {
 }
 .details {
   margin: 5px;
+}
+.top-line {
+  font-size: 15px;
 }
 </style>

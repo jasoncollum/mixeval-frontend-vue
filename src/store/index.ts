@@ -13,7 +13,7 @@ const store = createStore({
         return JSON.parse(state.artists)
       }
       return state.artists
-    }
+    },
   },
   mutations: {
     updateUsername(state, payload) {

@@ -39,6 +39,6 @@ export default {
   padding-top: 15px;
 }
 .views-margin {
-  margin-left: 275px;
+  margin-left: 340px;
 }
 </style>
