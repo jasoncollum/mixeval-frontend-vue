@@ -17,7 +17,7 @@
       <div class="top-panel-item">Artists | Songs</div>
     </div>
     <!-- artist | song card container -->
-    <div v-if="Array.isArray(artists)">
+    <div v-if="artists">
       <ArtistSongCard 
         v-for="artist in artists" 
         :key="artist.id" 

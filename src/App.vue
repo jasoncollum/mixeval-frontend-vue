@@ -2,7 +2,7 @@
 <div id="app">
   <Header />
   <Sidebar />
-  <div id="views">
+  <div id="views" :class="{'views-margin': username}">
     <router-view />
   </div>
 </div>
@@ -18,6 +18,11 @@ export default {
     Header, 
     Sidebar,
   },
+  computed: {
+    username() {
+      return this.$store.state.username
+    }
+  }
 }
 </script>
 
@@ -31,7 +36,9 @@ export default {
   min-height: 100vh;
 }
 #views {
-  margin-left: 275px;
   padding-top: 15px;
+}
+.views-margin {
+  margin-left: 275px;
 }
 </style>
