@@ -1,5 +1,5 @@
 <template>
-  <aside class="menu sidebar">
+  <aside v-show="username" class="menu sidebar">
     <!-- top panel container -->
     <div>
       <div class="top-panel-item">
@@ -52,9 +52,10 @@ export default {
   position: fixed;    
   height: 100vh;
   width: 275px;
-  padding: 65px 15px 0 15px;
+  padding: 15px 15px 0 15px;
   text-align: left;
   border-right: 1px solid lightgray;
+  background-color: white;
 }
 .top-panel-item {
   margin-bottom: 10px;
