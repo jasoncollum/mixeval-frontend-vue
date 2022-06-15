@@ -15,8 +15,15 @@
       <hr>
       <!-- <div class="top-panel-item">Open Songs</div> -->
       <div class="artists-songs-container">
-        <span @click="listArtists" class="top-panel-item artists-songs-spans">Artists</span> | 
-        <span @click="listSongs" class="top-panel-item artists-songs-spans">Songs</span></div>
+        <span @click="listArtists" 
+              class="artists-songs-spans" 
+              :class="{'selected': selectArtists}">Artists
+        </span> | <span 
+              @click="listSongs" 
+              class="artists-songs-spans"
+              :class="{'selected': selectSongs}">Songs
+        </span>
+      </div>
     </div>
     <!-- artist | song card container -->
     <div v-if="selectArtists">
@@ -62,13 +69,15 @@ export default {
     ]),
     songs() {
       const songs = []
-      this.artists.forEach(a => {
+      if (this.artists) {
+        this.artists.forEach(a => {
         let artist = a
         a.songs.forEach(song => {
           songs.push({...song, artistName: artist.name, artistImage: artist.image_url})
         })
       })
       return songs;
+      }
     },
   },
   methods: {
@@ -107,7 +116,12 @@ export default {
   justify-content: center;
 }
 .artists-songs-spans {
-  margin-left: 10px;
-  margin-right: 10px;
+  margin: 0 10px 15px 10px;
+}
+.artists-songs-spans:hover {
+  cursor: pointer;
+}
+.selected {
+  color: #42b983;
 }
 </style>
