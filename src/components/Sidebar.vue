@@ -47,7 +47,6 @@
 
 <script>
 import ArtistSongCard from './ArtistSongCard.vue'
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'Sidebar',
@@ -67,8 +66,6 @@ export default {
     artists() {
       return this.$store.state.artists
     },
-    ...mapGetters([
-    ]),
     songs() {
       const songs = []
       if (this.artists) {

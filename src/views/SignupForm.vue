@@ -48,6 +48,8 @@ export default defineComponent({
       this.username = ''
       this.email = ''
       this.password = ''
+
+      this.$router.push('/')
     }
   }
 });

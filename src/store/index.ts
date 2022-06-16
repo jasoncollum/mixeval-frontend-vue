@@ -5,9 +5,9 @@ const axios = require('axios').default;
 const store = createStore({
   state: {
     username: '',
-    artists: []
+    artists: [],
   },
-  getters: {    
+  getters: {   
   },
   mutations: {
     initialiseStore(state) {
