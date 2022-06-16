@@ -4,7 +4,7 @@
     <img v-else src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" /> -->
     <!-- temporary image url -->
     <img src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
-    <div v-if="songTitle" class="details">
+    <div v-if="songTitle" class="details" @click="toSongView">
       <p class="top-line">{{songTitle}}</p>
       <p class="content is-small">{{artistName}}</p>
     </div>
@@ -23,6 +23,12 @@
 export default {
   name: 'ArtistSongCard',
   props: ['artistName', 'artistSongCount', 'songTitle'],
+  methods: {
+    toSongView() {
+      console.log("TO SONG VIEW")
+      this.$router.push('/song-view')
+    }
+  }
 }
 </script>
 

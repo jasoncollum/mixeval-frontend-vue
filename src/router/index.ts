@@ -5,6 +5,7 @@ import CreateArtist from '../views/CreateArtist.vue'
 import CreateSong from '../views/CreateSong.vue'
 import SignupForm from '../views/SignupForm.vue'
 import SigninForm from '../views/SigninForm.vue'
+import SongView from '../views/SongView.vue'
 import store from '../store/index'
 
 const routes: Array<RouteRecordRaw> = [
@@ -46,6 +47,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/create-song',
     name: 'createSong',
     component: CreateSong,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/song-view',
+    name: 'SongView',
+    component: SongView,
     meta: {
       requiresAuth: true
     }
