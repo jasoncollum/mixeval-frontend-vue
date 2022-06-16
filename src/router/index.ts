@@ -5,6 +5,7 @@ import CreateArtist from '../views/CreateArtist.vue'
 import CreateSong from '../views/CreateSong.vue'
 import SignupForm from '../views/SignupForm.vue'
 import SigninForm from '../views/SigninForm.vue'
+import store from '../store/index'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -57,7 +58,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const authenticatedUser = localStorage.getItem('username')
+  const authenticatedUser = store.state.username
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
   if (requiresAuth && !authenticatedUser) {

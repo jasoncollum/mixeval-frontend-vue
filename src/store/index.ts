@@ -4,24 +4,25 @@ const axios = require('axios').default;
 
 const store = createStore({
   state: {
-    username: localStorage.getItem('username'),
-    artists: localStorage.getItem('artists')
+    username: '',
+    artists: []
   },
   getters: {    
-    artists(state) {
-      if (typeof(state.artists) === 'string') {
-        return JSON.parse(state.artists)
-      }
-      return state.artists
-    },
   },
   mutations: {
+    initialiseStore(state) {
+      if (localStorage.getItem('store')) {
+        this.replaceState(
+					Object.assign(state, JSON.parse(localStorage.getItem('store') || ''))
+				);
+      }
+    },
     updateUsername(state, payload) {
       state.username = payload
     },
     logoutUser(state) {
-      state.username = null
-      state.artists = null
+      state.username = ''
+      state.artists = []
       localStorage.clear()
     },
     setArtists(state, payload) {
@@ -37,13 +38,16 @@ const store = createStore({
           }
         }
       )
-      const artists = JSON.stringify(response.data)
+      const artists = response.data
       context.commit('setArtists', artists)
-      localStorage.setItem('artists', artists)
     }
   },
   modules: {
   },
+})
+
+const unsubscribe = store.subscribe((mutation, state) => {
+  localStorage.setItem('store', JSON.stringify(state))
 })
 
 export default store;

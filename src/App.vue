@@ -22,6 +22,9 @@ export default {
     username() {
       return this.$store.state.username
     }
+  },
+  beforeCreate() {
+    this.$store.commit('initialiseStore')
   }
 }
 </script>

@@ -64,19 +64,21 @@ export default {
     username() {
       return this.$store.state.username
     },
+    artists() {
+      return this.$store.state.artists
+    },
     ...mapGetters([
-      'artists',
     ]),
     songs() {
       const songs = []
       if (this.artists) {
         this.artists.forEach(a => {
-        let artist = a
-        a.songs.forEach(song => {
-          songs.push({...song, artistName: artist.name, artistImage: artist.image_url})
+          let artist = a
+          a.songs.forEach(song => {
+            songs.push({...song, artistName: artist.name, artistImage: artist.image_url})
+          })
         })
-      })
-      return songs;
+        return songs;
       }
     },
   },

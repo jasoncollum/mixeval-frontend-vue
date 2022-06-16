@@ -44,7 +44,6 @@ export default defineComponent({
         
         const { accessToken, username } = response.data
         localStorage.setItem('token', accessToken)
-        localStorage.setItem('username', username)
   
         this.updateUsername(username)
       } catch(error) {
@@ -56,8 +55,7 @@ export default defineComponent({
       } catch (error) {
         console.log(error.response.data.message)
       }
-
-      this.$router.push('/')
+      this.$router.push({ path: '/'})
     }
   }
 });
