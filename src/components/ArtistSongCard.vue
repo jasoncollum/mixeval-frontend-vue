@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue';
 <template>
   <div class="card-container">
     <!-- <img v-if="imageUrl" :src="imageUrl" />
@@ -19,17 +20,32 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   name: 'ArtistSongCard',
-  props: ['artistName', 'artistSongCount', 'songTitle'],
+  // props: ['artistName', 'artistSongCount', 'songTitle'],
+  props: {
+    artistName: {
+      required: true,
+      type: String
+    },
+    artistSongCount: {
+      required: true,
+      type: Number
+    },
+    songTitle: {
+      required: false,
+      type: String
+    }
+  },
   methods: {
     toSongView() {
-      console.log("TO SONG VIEW")
       this.$router.push('/song-view')
     }
   }
-}
+})
 </script>
 
 <style>

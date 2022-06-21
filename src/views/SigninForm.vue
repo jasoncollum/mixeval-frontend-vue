@@ -17,7 +17,7 @@
   </form>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 
 const axios = require('axios').default;
@@ -32,7 +32,7 @@ export default defineComponent({
     }
   },
   methods: {
-    updateUsername(username) {
+    updateUsername(username: string) {
       this.$store.commit('updateUsername', username)
     },
     async handleSubmit() {
@@ -46,13 +46,13 @@ export default defineComponent({
         localStorage.setItem('token', accessToken)
   
         this.updateUsername(username)
-      } catch(error) {
+      } catch(error: any) {
         console.log(error.response.data.message)
       }
 
       try {
         this.$store.dispatch('getArtistsWithOpenSongs')
-      } catch (error) {
+      } catch (error: any) {
         console.log(error.response.data.message)
       }
       this.$router.push({ path: '/'})

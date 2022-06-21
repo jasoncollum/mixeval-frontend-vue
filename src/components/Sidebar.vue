@@ -45,10 +45,12 @@
   </aside>
 </template>
 
-<script>
+<script lang="ts">
 import ArtistSongCard from './ArtistSongCard.vue'
+import SongWithArtist from '../types/SongWithArtist';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'Sidebar',
   components: {
     ArtistSongCard,
@@ -67,11 +69,10 @@ export default {
       return this.$store.state.artists
     },
     songs() {
-      const songs = []
-      if (this.artists) {
-        this.artists.forEach(a => {
-          let artist = a
-          a.songs.forEach(song => {
+      const songs: SongWithArtist[] = []
+      if (this.artists.length > 0) {
+        this.artists.forEach(artist => {
+          artist.songs.forEach(song => {
             songs.push({...song, artistName: artist.name, artistImage: artist.image_url})
           })
         })
@@ -89,7 +90,7 @@ export default {
       this.selectArtists = true;
     }
   }
-}
+})
 </script>
 
 <style>

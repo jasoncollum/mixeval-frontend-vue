@@ -1,13 +1,14 @@
 import { createStore } from 'vuex'
+import Artist from '@/types/Artist'
 
 const axios = require('axios').default;
 
 const store = createStore({
   state: {
     username: '',
-    artists: [],
+    artists: [] as Artist[],
   },
-  getters: {   
+  getters: {
   },
   mutations: {
     initialiseStore(state) {
@@ -17,7 +18,7 @@ const store = createStore({
 				);
       }
     },
-    updateUsername(state, payload) {
+    updateUsername(state, payload: string) {
       state.username = payload
     },
     logoutUser(state) {
@@ -25,7 +26,7 @@ const store = createStore({
       state.artists = []
       localStorage.clear()
     },
-    setArtists(state, payload) {
+    setArtists(state, payload: Artist[]) {
       state.artists = payload
     }
   },
@@ -38,7 +39,7 @@ const store = createStore({
           }
         }
       )
-      const artists = response.data
+      const artists: Artist[] = response.data
       context.commit('setArtists', artists)
     }
   },

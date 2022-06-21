@@ -8,11 +8,13 @@
 </div>
 </template>
 
-<script>
+<script lang="ts">
 import Header from './components/Header.vue'
 import Sidebar from './components/Sidebar.vue'
+import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex'
 
-export default {
+export default defineComponent({
   name: 'App',
   components: {
     Header, 
@@ -26,7 +28,7 @@ export default {
   beforeCreate() {
     this.$store.commit('initialiseStore')
   }
-}
+})
 </script>
 
 <style>
