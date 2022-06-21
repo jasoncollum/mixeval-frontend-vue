@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar is-transparent is-fixed-top">
+  <nav class="navbar is-transparent is-fixed-top has-shadow px-1">
     <div class="navbar-brand">
       <router-link to="/" class="navbar-item">MIXEVAL</router-link>
     </div>
@@ -31,7 +31,5 @@ export default defineComponent({
 </script>
 
 <style>
-.navbar {
-  border-bottom: 1px solid lightgray;
-}
+
 </style>

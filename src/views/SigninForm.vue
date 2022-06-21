@@ -11,7 +11,7 @@
     <div class="submit">
       <button>Sign In</button>
     </div>
-    <div class="signup">
+    <div class="is-size-7 has-text-centered">
       <router-link to="/signup" class="link">Sign Up</router-link>
     </div>
   </form>
@@ -62,9 +62,5 @@ export default defineComponent({
 </script>
 
 <style>
-.signup {
-  font-size: 0.8em;
-  text-align: center;
-  margin-top: 10px;
-}
+
 </style>

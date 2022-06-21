@@ -2,7 +2,7 @@
 <div id="app">
   <Header />
   <Sidebar />
-  <div id="views" :class="{'views-margin': username}">
+  <div id="views" class="pt-4 px-4" :class="{'views-margin': username}">
     <router-view />
   </div>
 </div>
@@ -12,7 +12,6 @@
 import Header from './components/Header.vue'
 import Sidebar from './components/Sidebar.vue'
 import { defineComponent } from 'vue';
-import { mapGetters } from 'vuex'
 
 export default defineComponent({
   name: 'App',
@@ -36,12 +35,12 @@ export default defineComponent({
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  /* text-align: center; */
+  /* color: #2c3e50; */
   min-height: 100vh;
 }
 #views {
-  padding-top: 15px;
+  /* padding-top: 15px; */
 }
 .views-margin {
   margin-left: 340px;

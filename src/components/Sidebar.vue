@@ -1,26 +1,26 @@
 <template>
-  <aside v-show="username" class="menu sidebar">
+  <aside v-show="username" class="menu sidebar has-background-white pt-4 pl-4">
     <!-- top panel container -->
     <div>
-      <div class="top-panel-item">
+      <div class="mb-2">
         <router-link to="/profile">> {{username}}</router-link>
       </div>
-      <div class="top-panel-item">O Search</div>
-      <div class="top-panel-item">
+      <div class="mb-2">O Search</div>
+      <div class="mb-2">
         <router-link to="/create-artist">+ Create Artist</router-link>
       </div>
-      <div class="top-panel-item">
+      <div class="mb-2">
         <router-link to="/create-song">+ Create Song</router-link>
       </div>
       <hr>
       <!-- <div class="top-panel-item">Open Songs</div> -->
-      <div class="artists-songs-container">
+      <div class="has-text-centered my-2">
         <span @click="listArtists" 
-              class="artists-songs-spans" 
+              class="artists-songs-spans mr-1" 
               :class="{'selected': selectArtists}">Artists
         </span> | <span 
               @click="listSongs" 
-              class="artists-songs-spans"
+              class="artists-songs-spans ml-1"
               :class="{'selected': selectSongs}">Songs
         </span>
       </div>
@@ -97,26 +97,8 @@ export default defineComponent({
 .sidebar {
   position: fixed;    
   height: 100vh;
-  /* width: 275px; */
   width: 340px;
-  padding: 15px 15px 0 15px;
-  text-align: left;
   border-right: 1px solid lightgray;
-  background-color: white;
-}
-.top-panel-item {
-  margin-bottom: 10px;
-}
-.top-panel-item:hover {
-  color: #42b983;
-  cursor: pointer;
-}
-.artists-songs-container {
-  display: flex;
-  justify-content: center;
-}
-.artists-songs-spans {
-  margin: 0 10px 15px 10px;
 }
 .artists-songs-spans:hover {
   cursor: pointer;
