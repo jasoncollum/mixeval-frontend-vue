@@ -1,5 +1,5 @@
 <template>
-  <h1>Sign Up</h1>
+  <!-- Sign Up -->
   <form @submit.prevent="handleSubmit">
     <label>Username:</label>
     <input type="text" required v-model="username" />
@@ -14,7 +14,7 @@
     <div class="submit">
       <button>Sign Up</button>
     </div>
-    <div class="signin">
+    <div class="is-size-7 has-text-centered">
       <router-link to="/signin" class="link">Sign In</router-link>
     </div>
   </form>
@@ -48,15 +48,13 @@ export default defineComponent({
       this.username = ''
       this.email = ''
       this.password = ''
+
+      this.$router.push('/')
     }
   }
 });
 </script>
 
 <style>
-.signin {
-  font-size: 0.8em;
-  text-align: center;
-  margin-top: 10px;
-}
+
 </style>

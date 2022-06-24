@@ -1,5 +1,5 @@
 <template>
-  <h1>Sign In</h1>
+  <!-- Sign In -->
   <form @submit.prevent="handleSubmit">
     <label>Email:</label>
     <input type="email" required v-model="email" />
@@ -11,13 +11,13 @@
     <div class="submit">
       <button>Sign In</button>
     </div>
-    <div class="signup">
+    <div class="is-size-7 has-text-centered">
       <router-link to="/signup" class="link">Sign Up</router-link>
     </div>
   </form>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 
 const axios = require('axios').default;
@@ -32,7 +32,7 @@ export default defineComponent({
     }
   },
   methods: {
-    updateUsername(username) {
+    updateUsername(username: string) {
       this.$store.commit('updateUsername', username)
     },
     async handleSubmit() {
@@ -42,29 +42,25 @@ export default defineComponent({
           password: this.password
         })
         
-        const accessToken = response.data.accessToken
-
-        if (!accessToken) {
-          this.$router.push('/signin')
-        }
-
+        const { accessToken, username } = response.data
         localStorage.setItem('token', accessToken)
-        localStorage.setItem('user_name', response.data.username)
-        this.updateUsername(response.data.username)
-        this.$router.push('/')
-
-      } catch(error) {
+  
+        this.updateUsername(username)
+      } catch(error: any) {
         console.log(error.response.data.message)
       }
+
+      try {
+        this.$store.dispatch('getArtistsWithOpenSongs')
+      } catch (error: any) {
+        console.log(error.response.data.message)
+      }
+      this.$router.push({ path: '/'})
     }
   }
 });
 </script>
 
 <style>
-.signup {
-  font-size: 0.8em;
-  text-align: center;
-  margin-top: 10px;
-}
+
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div id="home">
-    Getting started with MIXEVAL Frontend using Vue
+  <div>
+    This is the User Profile View ...
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'HomeView',
+  name: 'UserProfile',
 });
 </script>
 
