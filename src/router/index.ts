@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/profile',
-    name: 'user-profile',
+    name: 'userProfile',
     component: UserProfile,
     meta: {
       requiresAuth: true
@@ -53,11 +53,11 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/song-view',
-    name: 'SongView',
+    name: 'songView',
     component: SongView,
     meta: {
       requiresAuth: true
-    }
+    },
   },
 ]
 
