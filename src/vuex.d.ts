@@ -7,6 +7,7 @@ declare module '@vue/runtime-core' {
   interface State {
     username: string;
     artists: Artist[];
+    newArtistId: string;
   }
 
   interface ComponentCustomProperties {

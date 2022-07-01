@@ -7,8 +7,7 @@ const store = createStore({
   state: {
     username: '',
     artists: [] as Artist[],
-  },
-  getters: {
+    newArtistId: '',
   },
   mutations: {
     initialiseStore(state) {
@@ -28,6 +27,9 @@ const store = createStore({
     },
     setArtists(state, payload: Artist[]) {
       state.artists = payload
+    },
+    setNewArtistId(state, payload: string) {
+      state.newArtistId = payload
     }
   },
   actions: {
@@ -41,7 +43,12 @@ const store = createStore({
       )
       const artists: Artist[] = response.data
       context.commit('setArtists', artists)
+    },
+    updateNewArtistId(context, id: string) {
+      context.commit('setNewArtistId', id)
     }
+  },
+  getters: {
   },
   modules: {
   },
