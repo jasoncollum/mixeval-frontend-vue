@@ -32,8 +32,8 @@ export default defineComponent({
     }
   },
   methods: {
-    updateUsername(username: string) {
-      this.$store.commit('updateUsername', username)
+    setUsername(username: string) {
+      this.$store.commit('setUsername', username)
     },
     async handleSubmit() {
       try {
@@ -45,7 +45,7 @@ export default defineComponent({
         const { accessToken, username } = response.data
         localStorage.setItem('token', accessToken)
   
-        this.updateUsername(username)
+        this.setUsername(username)
       } catch(error: any) {
         console.log(error.response.data.message)
       }
