@@ -23,6 +23,7 @@ const store = createStore({
     logoutUser(state) {
       state.username = ''
       state.artists = []
+      state.newArtistId = ''
       localStorage.clear()
     },
     setArtists(state, payload: Artist[]) {
