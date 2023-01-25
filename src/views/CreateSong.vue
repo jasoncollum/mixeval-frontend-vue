@@ -19,7 +19,7 @@
       <button>Create Song</button>
     </div>
   </form>
-  <p>{{ this.previousPath}}</p>
+  
   <div class="is-size-7 has-text-centered">
       <router-link to="/song-view" class="link" @click="handleCreateSongLater">
         Create A Song Later
@@ -47,9 +47,6 @@ export default defineComponent({
       previousPath: this.$router.options.history.state,
     }
   },
-  // computed: {
-
-  // },
   methods: {
     async getArtistsDetails() {
       // get artist details to populate select options
@@ -80,11 +77,12 @@ export default defineComponent({
             }
           }
         )
-        this.$store.dispatch('updateNewArtistId', '')
-        this.title = ''
-        this.selectedArtistId = ''
-        this.artistList = []
-        this.$router.push('/song-view')
+        this.$store.dispatch('getArtistsWithOpenSongs');
+        this.$store.dispatch('updateNewArtistId', '');
+        this.title = '';
+        this.selectedArtistId = '';
+        this.artistList = [];
+        this.$router.push('/song-view');
       } catch (error: any) {
         console.log(error.response.data.message)
       }
