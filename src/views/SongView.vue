@@ -12,22 +12,24 @@
       </select>
     </div>
   </nav>
-  <div class="">
-    <!-- <SongCard />
-    <SongCard />
-    <SongCard />
-    <SongCard /> -->
+  <div class="songcard-container">
+    <SongCard 
+      v-for="version in song.versions"
+      :key="version.id"
+      :songTitle="song.title"
+      :artistName="song.artistName"
+      :versionNumber="version.number"
+    />
   </div>
-
-  <p>{{this.$router.options.history.state}}</p>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import SongCard from '../components/SongCard.vue'
+import SongWithArtist from '@/types/SongWithArtist';
 
 export default defineComponent({
-  name: 'Sidebar',
+  name: 'SongView',
   components: {
     SongCard,
   },
@@ -35,7 +37,12 @@ export default defineComponent({
     return {
       
     }
-  }
+  },
+  computed: {
+    song() {
+      return this.$store.state.songViewSong;
+    }
+  },
 });
 </script>
 

@@ -5,22 +5,16 @@
         <img src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
       </figure>   
       <div class="mx-1 my-1">
-        <p class="top-line is-size-6">Song Title</p>
-        <p class="content is-size-7">Artist Name</p>
+        <p class="top-line is-size-6">{{songTitle}}</p>
+        <p class="content is-size-7">{{artistName}}</p>
       </div>
     </div>
 
-    <div class="mx-1 my-1">
-        Mix Version 04
-    </div>
+    <div class="mx-1 my-1">Mix Version {{versionNumber}}</div>
 
-    <div class="mx-1 my-1">
-        Notes
-    </div>
+    <div class="mx-1 my-1">Notes</div>
 
-    <div class="mx-1 my-1">
-        3:25
-    </div>
+    <div class="mx-1 my-1">3:25</div>
   </div>
 </template>
 
@@ -38,7 +32,7 @@ export default defineComponent({
       required: true,
       type: String
     },
-    mixVersionNumber: {
+    versionNumber: {
       required: true,
       type: Number
     }
