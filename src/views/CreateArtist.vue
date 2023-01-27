@@ -43,7 +43,7 @@ export default defineComponent({
         }
       )
         const newArtistId = response.data.id as string
-        this.$store.dispatch('updateNewArtistId', newArtistId)
+        this.$store.commit('setNewArtistId', newArtistId)
         this.$router.push('/create-song')
       } catch(error: any) {
         console.log(error.response.data.message)

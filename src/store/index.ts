@@ -27,7 +27,6 @@ const store = createStore({
       state.artists = [];
       state.newArtistId = '';
       state.songViewSong = {} as SongWithArtist;
-      localStorage.clear();
     },
     setArtists(state, payload: Artist[]) {
       state.artists = payload;
@@ -51,8 +50,9 @@ const store = createStore({
       const artists: Artist[] = response.data
       context.commit('setArtists', artists)
     },
-    updateNewArtistId(context, id: string) {
-      context.commit('setNewArtistId', id)
+    async logoutUser(context) {
+      await localStorage.clear();
+      context.commit('logoutUser');
     }
   },
   getters: {
