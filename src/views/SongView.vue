@@ -13,10 +13,10 @@
     </div>
   </nav>
   <div class="">
+    <!-- <SongCard />
     <SongCard />
     <SongCard />
-    <SongCard />
-    <SongCard />
+    <SongCard /> -->
   </div>
 
   <p>{{this.$router.options.history.state}}</p>

@@ -51,7 +51,7 @@ export default defineComponent({
       }
 
       try {
-        this.$store.dispatch('getArtistsWithOpenSongs')
+        this.$store.dispatch('requestArtistsWithOpenSongs')
       } catch (error: any) {
         console.log(error.response.data.message)
       }

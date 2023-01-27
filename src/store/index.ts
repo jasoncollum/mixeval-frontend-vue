@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import Artist from '@/types/Artist'
+import SongWithArtist from '@/types/SongWithArtist'
 
 const axios = require('axios').default;
 
@@ -8,6 +9,7 @@ const store = createStore({
     username: '',
     artists: [] as Artist[],
     newArtistId: '',
+    songViewSong: {} as SongWithArtist,
   },
   mutations: {
     initialiseStore(state) {
@@ -18,23 +20,27 @@ const store = createStore({
       }
     },
     setUsername(state, payload: string) {
-      state.username = payload
+      state.username = payload;
     },
     logoutUser(state) {
-      state.username = ''
-      state.artists = []
-      state.newArtistId = ''
-      localStorage.clear()
+      state.username = '';
+      state.artists = [];
+      state.newArtistId = '';
+      state.songViewSong = {} as SongWithArtist;
+      localStorage.clear();
     },
     setArtists(state, payload: Artist[]) {
-      state.artists = payload
+      state.artists = payload;
     },
     setNewArtistId(state, payload: string) {
-      state.newArtistId = payload
+      state.newArtistId = payload;
+    },
+    setSongViewSong(state, payload: SongWithArtist) {
+      state.songViewSong = payload;
     }
   },
   actions: {
-    async getArtistsWithOpenSongs(context) {
+    async requestArtistsWithOpenSongs(context) {
       const token = localStorage.getItem('token')
       const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/artists?hasOpenSongs=true`, {
           headers: {
