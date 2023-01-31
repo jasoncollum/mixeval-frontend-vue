@@ -30,6 +30,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import ArtistDetail from '@/types/ArtistDetail';
+import Song from '@/types/Song';
 
 const axios = require('axios').default;
 
@@ -77,12 +78,13 @@ export default defineComponent({
             }
           }
         )
+        const createdSong: Song = response.data;
         this.$store.dispatch('requestArtistsWithOpenSongs');
         this.$store.commit('setNewArtistId', '');
         this.title = '';
         this.selectedArtistId = '';
         this.artistList = [];
-        this.$router.push('/song-view');
+        this.$router.push(`/song/${createdSong.id}`);
       } catch (error: any) {
         console.log(error.response.data.message)
       }

@@ -9,7 +9,6 @@ const store = createStore({
     username: '',
     artists: [] as Artist[],
     newArtistId: '',
-    songViewSong: {} as SongWithArtist,
   },
   mutations: {
     initialiseStore(state) {
@@ -26,7 +25,6 @@ const store = createStore({
       state.username = '';
       state.artists = [];
       state.newArtistId = '';
-      state.songViewSong = {} as SongWithArtist;
     },
     setArtists(state, payload: Artist[]) {
       state.artists = payload;
@@ -34,9 +32,6 @@ const store = createStore({
     setNewArtistId(state, payload: string) {
       state.newArtistId = payload;
     },
-    setSongViewSong(state, payload: SongWithArtist) {
-      state.songViewSong = payload;
-    }
   },
   actions: {
     async requestArtistsWithOpenSongs(context) {
@@ -56,6 +51,22 @@ const store = createStore({
     }
   },
   getters: {
+    getSongWithArtistBySongId: (state) => (songId: string) => {
+      let foundSong = {} as SongWithArtist;
+      state.artists.forEach(artist => {
+        artist.songs.forEach(song => {
+          if (song.id === songId) {
+            foundSong = {
+              ...song,
+              artistName: artist.name,
+              artistImage: artist.image_url
+            }
+            return;
+          }
+        })
+      })
+      return foundSong;
+    }
   },
   modules: {
   },

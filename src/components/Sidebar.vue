@@ -40,7 +40,7 @@
         :key="song.id" 
         :songTitle="song.title"
         :artistName="song.artistName"
-        @click="handleSongCardClick(song)"
+        @click="handleSongCardClick(song.id)"
       />
     </div>
   </aside>
@@ -90,11 +90,8 @@ export default defineComponent({
       this.selectSongs = false;
       this.selectArtists = true;
     },
-    handleSongCardClick(song: SongWithArtist): void {
-      if (this.songs) {
-        this.$store.commit('setSongViewSong', song);
-      }
-      this.$router.push('/song-view');
+    handleSongCardClick(id: string): void {
+      this.$router.push(`/song/${id}`);
     },
   }
 })
