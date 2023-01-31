@@ -52,7 +52,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/song-view',
+    path: '/song/:id',
     name: 'songView',
     component: SongView,
     meta: {

@@ -39,8 +39,8 @@ export default defineComponent({
     }
   },
   computed: {
-    song() {
-      return this.$store.state.songViewSong;
+    song(): SongWithArtist {
+      return this.$store.getters.getSongWithArtistBySongId(this.$route.params.id);
     }
   },
 });
