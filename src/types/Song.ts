@@ -7,5 +7,6 @@ export default interface Song {
   created_at: string;
   updated_at: string;
   triggerUpdate: string;
+  artistId: string;
   versions: Version[];
 }

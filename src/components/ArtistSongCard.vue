@@ -7,7 +7,7 @@ import { defineComponent } from 'vue';
     <figure class="image is-48x48 mx-1 my-1">
       <img src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
     </figure>
-    <div v-if="songTitle" class="mx-1 my-1" @click="toSongView">
+    <div v-if="songTitle" class="mx-1 my-1">
       <p class="top-line is-size-6">{{songTitle}}</p>
       <p class="content is-size-7">{{artistName}}</p>
     </div>
@@ -33,17 +33,12 @@ export default defineComponent({
       type: String
     },
     artistSongCount: {
-      required: true,
+      required: false,
       type: Number
     },
     songTitle: {
       required: false,
       type: String
-    }
-  },
-  methods: {
-    toSongView() {
-      this.$router.push('/song-view')
     }
   }
 })

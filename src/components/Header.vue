@@ -18,13 +18,13 @@ export default defineComponent({
   name: 'Header',
   computed: {
     username() {
-      return this.$store.state.username
+      return this.$store.state.username;
     },
   },
   methods: {
     logout() {
-      this.$store.commit('logoutUser')
-      this.$router.push('/signin')
+      this.$store.dispatch('logoutUser');
+      this.$router.push('/signin');
     },
   },
 })

@@ -7,6 +7,7 @@ export default interface SongWithArtist {
   created_at: string;
   updated_at: string;
   triggerUpdate: string;
+  artistId: string;
   versions: Version[];
   artistName: string;
   artistImage: string;

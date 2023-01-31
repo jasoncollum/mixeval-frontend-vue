@@ -77,8 +77,8 @@ export default defineComponent({
             }
           }
         )
-        this.$store.dispatch('getArtistsWithOpenSongs');
-        this.$store.dispatch('updateNewArtistId', '');
+        this.$store.dispatch('requestArtistsWithOpenSongs');
+        this.$store.commit('setNewArtistId', '');
         this.title = '';
         this.selectedArtistId = '';
         this.artistList = [];
@@ -89,12 +89,12 @@ export default defineComponent({
     },
     handleNewArtist() {
       if (this.selectedArtistId === 'create-new-artist') {
-        this.$store.dispatch('updateNewArtistId', '');
+        this.$store.commit('setNewArtistId', '');
         this.$router.push('/create-artist');
       }
     },
     handleCreateSongLater() {
-      this.$store.dispatch('updateNewArtistId', '');
+      this.$store.commit('setNewArtistId', '');
     }
   }
 });
