@@ -12,7 +12,7 @@
 
     <div class="mx-1 my-1" @click="$emit('showForm', true)">New Version</div>
 
-    <div class="mx-1 my-1">Notes</div>
+    <div class="mx-1 my-1" @click="handleNotesClick">Notes</div>
 
     <div class="mx-1 my-1">3:25</div>
   </div>
@@ -35,8 +35,17 @@ export default defineComponent({
     versionNumber: {
       required: true,
       type: Number
+    },
+    versionId: {
+      required: true,
+      type: String
     }
   },
+  methods: {
+    handleNotesClick() {
+      this.$router.push(`/version/${this.versionId}/notes`);
+    }
+  }
 })
 </script>
 
