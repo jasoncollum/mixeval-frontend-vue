@@ -9,7 +9,6 @@ declare module '@vue/runtime-core' {
     username: string;
     artists: Artist[];
     newArtistId: string;
-    songViewSong: SongWithArtist;
   }
 
   interface ComponentCustomProperties {

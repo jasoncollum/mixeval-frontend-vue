@@ -5,12 +5,12 @@
         <img src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
       </figure>   
       <div class="mx-1 my-1">
-        <p class="top-line is-size-6">{{songTitle}}</p>
+        <p class="top-line is-size-6">{{songTitle}} MIX V{{versionNumber}}</p>
         <p class="content is-size-7">{{artistName}}</p>
       </div>
     </div>
 
-    <div class="mx-1 my-1">Mix Version {{versionNumber}}</div>
+    <div class="mx-1 my-1" @click="$emit('showForm', true)">New Version</div>
 
     <div class="mx-1 my-1">Notes</div>
 
