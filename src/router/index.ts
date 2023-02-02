@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import UserProfile from '../views/UserProfile.vue'
 import CreateArtist from '../views/CreateArtist.vue'
 import CreateSong from '../views/CreateSong.vue'
+import VersionEdit from '../views/VersionEdit.vue'
 import SignupForm from '../views/SignupForm.vue'
 import SigninForm from '../views/SigninForm.vue'
 import SongView from '../views/SongView.vue'
@@ -36,6 +37,8 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    // *** rename this path '/artist/create' and refactor where needed ***
+    // *** rename name 'artistCreate' and component 'ArtistCreate' and refactor ***
     path: '/create-artist',
     name: 'createArtist',
     component: CreateArtist,
@@ -44,6 +47,8 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    // *** rename this path '/song/create' and refactor where needed ***
+    // *** rename name 'songCreate' and component 'SongCreate' and refactor ***
     path: '/create-song',
     name: 'createSong',
     component: CreateSong,
@@ -59,6 +64,14 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true
     },
   },
+  {
+    path: '/version/edit',
+    name: 'versionEdit',
+    component: VersionEdit,
+    meta: {
+      requiresAuth: true
+    },
+  }
 ]
 
 const router = createRouter({

@@ -9,7 +9,13 @@
     <input type="text" v-model="image_url" />
 
     <div class="submit">
-      <button>Submit</button>
+      <button class="button is-rounded">Submit</button>
+    </div>
+
+    <div class="is-size-7 has-text-centered">
+      <router-link to="/" class="link">
+        Cancel
+      </router-link>
     </div>
   </form>
 </template>

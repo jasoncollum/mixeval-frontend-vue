@@ -9,7 +9,7 @@
     <div v-if="passwordError" class="error">{{ passwordError }}</div>
 
     <div class="submit">
-      <button>Sign In</button>
+      <button class="button is-rounded">Sign In</button>
     </div>
     <div class="is-size-7 has-text-centered">
       <router-link to="/signup" class="link">Sign Up</router-link>

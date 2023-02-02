@@ -16,15 +16,16 @@
     <input type="text" v-model="title" required />
 
     <div class="submit">
-      <button>Create Song</button>
+      <button class="button is-rounded">Create Song</button>
     </div>
-  </form>
-  
-  <div class="is-size-7 has-text-centered">
-      <router-link to="/song-view" class="link" @click="handleCreateSongLater">
+
+    <div class="is-size-7 has-text-centered">
+      <router-link to="/" class="link" @click="handleCreateSongLater">
         Create A Song Later
       </router-link>
     </div>
+  </form>
+  
 </template>
 
 <script lang="ts">
