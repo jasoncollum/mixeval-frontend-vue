@@ -66,7 +66,25 @@ const store = createStore({
         })
       })
       return foundSong;
-    }
+    },
+    getSongWithArtistByVersionId: (state) => (versionId: string) => {
+      let foundSong = {} as SongWithArtist;
+      state.artists.forEach(artist => {
+        artist.songs.forEach(song => {
+          song.versions.forEach(version => {
+            if (version.id === versionId) {
+              foundSong = {
+                ...song,
+                artistName: artist.name,
+                artistImage: artist.image_url
+              }
+              return;
+            }
+          })
+        })
+      })
+      return foundSong;
+    },
   },
   modules: {
   },
