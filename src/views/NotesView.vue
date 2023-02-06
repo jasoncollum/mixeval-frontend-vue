@@ -7,14 +7,8 @@
       <p class="has-text-centered">Client Notes | Mix Revisions</p>
     </div>
 
-    <div id="notes-container" v-if="hasNotes">
-      <NoteCard 
-        v-for="note in versionNotes"
-        :key="note.id"
-        :note="note"
-      />
-    </div>
-    <div v-else class="has-text-centered">
+    <!-- Create New Note textarea -->
+    <div class="has-text-centered mb-6">
       <textarea 
         class="textarea mt-5 mb-2" 
         v-model="newNoteText" 
@@ -22,11 +16,22 @@
       >
       </textarea>
       <div class="is-flex is-justify-content-flex-end">
-        <div class="is-clickable mr-2" @click="pushNewNote">Done</div>
+        <div class="is-clickable mr-2" @click="addNewNote">Done</div>
       </div>
     </div>
 
-    <p class="has-text-centered is-clickable" @click="createNewNotes">Back</p>
+    <!-- Notes section -->
+    <div id="notes-container">
+      <NoteCard 
+        v-for="note in versionNotes"
+        :key="note.id"
+        :note="note"
+      />
+    </div>
+
+    <p class="has-text-centered">
+      <span class="is-clickable" @click="postNewNotes">Back</span>
+    </p>
   </div>
 </template>
 
@@ -52,7 +57,7 @@ export default defineComponent({
       newNoteText: '',
       newNoteCount: 0,
       // array of new notes to post
-      newNotes: [] as Array<NewNote> 
+      newNotes: [] as Array<Partial<NewNote>>
     }
   },
   computed: {
@@ -61,24 +66,40 @@ export default defineComponent({
     },
   },
   methods: {
-    pushNewNote() {
+    addNewNote() {
+      // check to see if new note has text
       if (!this.newNoteText) {
         return
       }
+      // use the newNoteCount to assign temporary id to be used for :key when looping
       this.newNoteCount++;
+      // create a new note object and push to versionNotes
       const newNote = {
         id: `newNote${(this.newNoteCount).toString()}`,
         text: this.newNoteText,
         versionId: this.versionId
       }
-      this.versionNotes.push(newNote);
+      this.versionNotes.unshift(newNote);
+      // reset newNoteText value to empty string
       this.newNoteText = '';
+      // set hasNotes to show notes in case there were previously no notes
       this.hasNotes = this.versionNotes.length > 0;
     },
-    createNewNotes() {
-      // temporarily called by clicking on Back button ***
-      this.newNotes = this.versionNotes.filter(note => note.id.includes('newNote'));
-      console.log("NEW NOTES::", this.newNotes)
+    postNewNotes() {
+      // ^ method currently called by clicking on Back button ***
+      // loop over versionNotes, if id includes 'newNote' remove id and push to newNotes array
+      this.versionNotes.forEach(note => {
+        if (note.id && note.id.includes('newNote')) {
+          this.newNotes.push({
+            text: note.text,
+            versionId: note.versionId
+          })
+        }
+      });
+      
+      // post request will go here...
+      console.log("VERSION NOTES::", this.versionNotes)
+      console.log("NEW NOTES TO BE POSTED::", this.newNotes)
 
       this.$router.push(`/song/${this.song.id}`)
     }

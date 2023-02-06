@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div>
-      <span v-if="!note.edit" @click="note['edit'] = !edit">{{note.text}}</span> 
+    <div class="mb-6">
+      <span 
+        v-if="!note.edit" @click="note['edit'] = !edit" 
+      >{{note.text}}</span> 
       <br>
       <div v-if="note.edit">
         <textarea
@@ -9,7 +11,7 @@
           v-model="note.text"
         ></textarea>
         <div class="is-flex is-justify-content-flex-end">
-          <div class="is-clickable mr-2" @click="note.edit = false">x</div>
+          <div class="is-clickable mr-2" @click="note.edit = false">Done</div>
         </div>
       </div>
     </div>
