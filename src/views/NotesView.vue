@@ -1,24 +1,32 @@
 <template>
   <div class="mx-4 my-4">
     <div class="mb-5">
-      <div class="has-text-centered" v-if="song && version">
-        {{song.title}} MIX V{{version && version.number}} by {{song.artistName}}
+      <div class="has-text-centered" v-if="song && versionNum">
+        {{song.title}} MIX V{{versionNum}} by {{song.artistName}}
       </div>
-      <p class="has-text-centered">Client Notes</p>
+      <p class="has-text-centered">Client Notes | Mix Revisions</p>
     </div>
+
     <div id="notes-container" v-if="hasNotes">
-      <Note 
-        v-for="note in version.notes"
+      <NoteCard 
+        v-for="note in versionNotes"
         :key="note.id"
-        :id="note.id"
-        :text="note.text"
-        :revisions="note.revisions"
-        :versionId="note.versionId"
+        :note="note"
       />
     </div>
     <div v-else class="has-text-centered">
-      There are currently no notes for this mix version...
+      <textarea 
+        class="textarea mt-5 mb-2" 
+        v-model="newNoteText" 
+        placeholder="Enter a note..."
+      >
+      </textarea>
+      <div class="is-flex is-justify-content-flex-end">
+        <div class="is-clickable mr-2" @click="pushNewNote">Done</div>
+      </div>
     </div>
+
+    <p class="has-text-centered is-clickable" @click="createNewNotes">Back</p>
   </div>
 </template>
 
@@ -26,28 +34,62 @@
 import { defineComponent } from 'vue';
 import SongWithArtist from '@/types/SongWithArtist';
 import Version from '@/types/Version';
-import Note from '../components/Note.vue'
+import Note from '@/types/Note';
+import NewNote from '@/types/NewNote';
+import NoteCard from '../components/NoteCard.vue'
 
 export default defineComponent({
   name: 'NotesView',
   components: {
-    Note,
+    NoteCard,
   },
   data() {
     return {
-      versionId: this.$route.params.id as String,
-      version: null as Version | null,
-      hasNotes: false, 
+      versionId: this.$route.params.id as string,
+      versionNum: null as number | null,
+      versionNotes: [] as Array<Note | NewNote>,
+      hasNotes: false,
+      newNoteText: '',
+      newNoteCount: 0,
+      // array of new notes to post
+      newNotes: [] as Array<NewNote> 
     }
   },
   computed: {
     song(): SongWithArtist {
-      return this.$store.getters.getSongWithArtistByVersionId(this.versionId);
+      return this.$store.getters.getSongWithArtistByVersionId(this.$route.params.id as string);
     },
   },
+  methods: {
+    pushNewNote() {
+      if (!this.newNoteText) {
+        return
+      }
+      this.newNoteCount++;
+      const newNote = {
+        id: `newNote${(this.newNoteCount).toString()}`,
+        text: this.newNoteText,
+        versionId: this.versionId
+      }
+      this.versionNotes.push(newNote);
+      this.newNoteText = '';
+      this.hasNotes = this.versionNotes.length > 0;
+    },
+    createNewNotes() {
+      // temporarily called by clicking on Back button ***
+      this.newNotes = this.versionNotes.filter(note => note.id.includes('newNote'));
+      console.log("NEW NOTES::", this.newNotes)
+
+      this.$router.push(`/song/${this.song.id}`)
+    }
+  },
   mounted() {
-    this.version = this.song.versions.find(version => version.id === this.versionId) as Version;
-    this.hasNotes = this.version.notes.length > 0;
+    const version = this.song.versions.find(version => version.id === this.versionId) as Version;
+    if (version) {
+      this.versionNum = version.number;
+      this.versionNotes = [...version.notes];
+      this.hasNotes = this.versionNotes.length > 0;
+    }
   }
 });
 </script>
