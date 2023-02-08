@@ -86,6 +86,13 @@ export default defineComponent({
     toggleShowNewNoteInput() {
       this.showNewNoteInput = !this.showNewNoteInput;
     },
+    removeNoteFromVersionNotes(noteId: string) {
+      // helper: removes note from versionNotes array
+      const index = this.versionNotes.findIndex(note => note.id === noteId);
+      if (index >= 0) {
+        this.versionNotes.splice(index, 1);
+      }
+    },
     addNewNote() {
       // check to see if new note has text
       if (!this.newNoteText) {
@@ -120,8 +127,8 @@ export default defineComponent({
           console.log("EDITED IDS::", this.editedNoteIds);
         }
 
-        // filter versionNotes to REMOVE note from array
-        this.versionNotes = this.versionNotes.filter(note => note.id !== noteId);
+        // REMOVE note from versionNotes array
+        this.removeNoteFromVersionNotes(noteId);
         console.log("VERSION NOTES::", this.versionNotes)
       } else {
         console.log("NOTE EDITED::", noteId)
@@ -141,8 +148,8 @@ export default defineComponent({
         this.deletedNoteIds.push(noteId);
       }
 
-      // filter versionNotes to REMOVE note from array
-      this.versionNotes = this.versionNotes.filter(note => note.id !== noteId);
+      // REMOVE note from versionNotes array
+      this.removeNoteFromVersionNotes(noteId);
       console.log("VERSION NOTES::", this.versionNotes);
     },
     postNewNotes() {

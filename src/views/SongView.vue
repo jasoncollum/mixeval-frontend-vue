@@ -98,7 +98,7 @@ export default defineComponent({
   mounted() {
     this.newVersionNumber = this.song.versions.length + 1;
   },
-  watch: {
+  watchEffect: {
     song() {
       this.newVersionNumber = this.song.versions.length + 1;
     }
