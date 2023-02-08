@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <div class="mx-1 my-1" @click="$emit('showForm', true)">New Version</div>
+    <div class="mx-1 my-1" @click="$emit('showForm')">New Version</div>
 
     <div class="mx-1 my-1" @click="handleNotesClick">Notes</div>
 
