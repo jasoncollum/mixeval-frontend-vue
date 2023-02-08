@@ -8,15 +8,25 @@
     </div>
 
     <!-- Create New Note textarea -->
-    <div class="has-text-centered mb-6">
-      <textarea 
-        class="textarea mt-5 mb-2" 
-        v-model="newNoteText" 
-        placeholder="Enter a note..."
-      >
-      </textarea>
-      <div class="is-flex is-justify-content-flex-end">
-        <div class="is-clickable mr-2" @click="addNewNote">Done</div>
+    <div class="mt-5 mb-6">
+      <div class="mb-2">
+        <span 
+          @click="toggleShowNewNoteInput" 
+          class="is-clickable"
+        >
+          {{showNewNoteInput ? 'Close' : '+ New Note'}}
+        </span>
+      </div>
+      <div v-show="showNewNoteInput" class="has-text-centered">
+        <textarea 
+          class="textarea mb-2" 
+          v-model="newNoteText" 
+          placeholder="Enter a note..."
+        >
+        </textarea>
+        <div class="is-flex is-justify-content-flex-end">
+          <div class="is-clickable" @click="addNewNote">Done</div>
+        </div>
       </div>
     </div>
 
@@ -58,7 +68,7 @@ export default defineComponent({
       versionId: this.$route.params.id as string,
       versionNum: null as number | null,
       versionNotes: [] as Array<Note | NewNote>,
-      hasNotes: false,
+      showNewNoteInput: true,
       newNoteText: '',
       newNoteCount: 0,
       // array of new notes to post
@@ -73,6 +83,9 @@ export default defineComponent({
     },
   },
   methods: {
+    toggleShowNewNoteInput() {
+      this.showNewNoteInput = !this.showNewNoteInput;
+    },
     addNewNote() {
       // check to see if new note has text
       if (!this.newNoteText) {
@@ -90,7 +103,7 @@ export default defineComponent({
       // reset newNoteText value to empty string
       this.newNoteText = '';
       // set hasNotes to show notes in case there were previously no notes
-      this.hasNotes = this.versionNotes.length > 0;
+      this.showNewNoteInput = this.versionNotes.length < 1;
     },
     handleEditedNote(noteId: string, noteText: string) {
       if (!noteText) {
@@ -181,7 +194,7 @@ export default defineComponent({
     if (version) {
       this.versionNum = version.number;
       this.versionNotes = [...version.notes];
-      this.hasNotes = this.versionNotes.length > 0;
+      this.showNewNoteInput = this.versionNotes.length < 1;
     }
   }
 });

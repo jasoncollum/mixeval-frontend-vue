@@ -4,7 +4,7 @@
       <div v-if="!note.edit">
         <span @click="note['edit'] = !edit">{{note.text}}</span>
         <span 
-          class="is-pulled-right is-clickable mr-2" 
+          class="is-pulled-right is-clickable" 
           @click="$emit('deletedNote', note.id)"
         >
           delete
@@ -18,7 +18,7 @@
         ></textarea>
         <div class="is-flex is-justify-content-flex-end">
           <div 
-            class="is-clickable mr-2" 
+            class="is-clickable" 
             @click="note.edit = false; $emit('editedNote', note.id, note.text)"
           >Done</div>
         </div>
