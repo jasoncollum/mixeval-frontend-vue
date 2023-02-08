@@ -44,7 +44,7 @@
     <p class="has-text-centered">
       <span 
         class="is-clickable" 
-        @click="postNewNotes(); putEditedNotes(); deleteNotes();"
+        @click="$router.go(-1)"
       >Back</span>
     </p>
   </div>
@@ -162,8 +162,6 @@ export default defineComponent({
         console.log("VERSION NOTES::", this.versionNotes)
         console.log("NEW NOTES TO BE POSTED::", this.newNotes)
       }
-
-      this.$router.push(`/song/${this.song.id}`)
     },
     putEditedNotes() {
       // ^ method currently called by clicking on Back button ***
@@ -196,6 +194,14 @@ export default defineComponent({
       this.versionNotes = [...version.notes];
       this.showNewNoteInput = this.versionNotes.length < 1;
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    // Make API requests here...
+    console.log("MAKE API REQUESTS HERE");
+    this.postNewNotes();
+    this.putEditedNotes();
+    this.deleteNotes();
+    next();
   }
 });
 </script>
