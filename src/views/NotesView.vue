@@ -76,7 +76,6 @@ export default defineComponent({
       // array of new notes to post
       newNotes: [] as Array<{ text: string, versionId: string}>,
       editedNoteIds: [] as Array<string>,
-      deletedNoteIds: [] as Array<string>,
     }
   },
   computed: {
@@ -114,47 +113,49 @@ export default defineComponent({
       // set hasNotes to show notes in case there were previously no notes
       this.showNewNoteInput = this.versionNotes.length < 1;
     },
-    handleEditedNote(noteId: string, noteText: string) {
+    async handleEditedNote(noteId: string, noteText: string) {
       if (!noteText) {
         if (!noteId.includes('newNote')) {
-          console.log("NO TEXT AND NOT A NEW NOTE - NEED TO DELETE NOTE")
-          // search deletedNoteIds, if id not found, PUSH id
-          const idFound = this.deletedNoteIds.find(id => id === noteId);
-          if (!idFound) {
-            this.deletedNoteIds.push(noteId);
-            console.log("DELETED IDS::", this.deletedNoteIds);
+          // if no text and not a newnote - delete the note
+          try {
+            await this.handleDeletedNote(noteId);
+            // filter editedNoteIds to REMOVE noteId from array
+            this.editedNoteIds = this.editedNoteIds.filter(id => id !== noteId);
+            // REMOVE note from versionNotes array
+            this.removeNoteFromVersionNotes(noteId);
+          } catch (error: any) {
+            console.log(error.response.data.message)
           }
-          // filter editedNoteIds to REMOVE noteId from array
-          this.editedNoteIds = this.editedNoteIds.filter(id => id !== noteId);
-          console.log("EDITED IDS::", this.editedNoteIds);
         }
-
-        // REMOVE note from versionNotes array
-        this.removeNoteFromVersionNotes(noteId);
-        console.log("VERSION NOTES::", this.versionNotes)
       } else {
-        console.log("NOTE EDITED::", noteId)
         if (!noteId.includes('newNote')) {
           // search editedNoteIds, if id not found, PUSH id to array
           const idFound = this.editedNoteIds.find(id => id === noteId);
           if (!idFound) {
             this.editedNoteIds.push(noteId);
-            console.log("ADDED TO EDITED NOTE IDS::", this.editedNoteIds);
           }
         }
       }
     },
-    handleDeletedNote(noteId: string) {
+    async handleDeletedNote(noteId: string) {
       if (!noteId.includes('newNote')) {
-        // push id onto deletedNoteIds
-        this.deletedNoteIds.push(noteId);
+        try {
+          const token = localStorage.getItem('token');
+          const response = await axios.delete(`${process.env.VUE_APP_ROOT_API}/notes/${noteId}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          )
+          // REMOVE note from versionNotes array
+          this.removeNoteFromVersionNotes(noteId);
+        } catch (error: any) {
+          console.log(error.response.data.message)
+        }
       }
-
-      // REMOVE note from versionNotes array
-      this.removeNoteFromVersionNotes(noteId);
-      console.log("VERSION NOTES::", this.versionNotes);
     },
-    async postNewNotes() {
+    async postNewNotes(): Promise<void> {
       // ^ method currently called by clicking on Back button ***
       // loop over versionNotes, if id includes 'newNote' remove id and push to newNotes array
       // const newNotes = [] as Array<{ text: string, versionId: string}>;
@@ -167,9 +168,10 @@ export default defineComponent({
           })
         }
       });
-      const newNotesToPost = this.newNotes;
+      const newNotesToPost = [...this.newNotes];
       // New Notes post request...
       if (newNotesToPost.length > 0) {
+        console.log('NEW NOTES POSTING', newNotesToPost)
         try {
           const token = localStorage.getItem('token')
           const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/notes`,
@@ -185,7 +187,7 @@ export default defineComponent({
         }
       }
     },
-    async patchEditedNotes() {
+    async patchEditedNotes(): Promise<void> {
       // ^ method currently called by clicking on Back button ***
       // for each editedNoteId, loop over versionNotes and push to editedNotes array
       // *** editedNotes temporarily Partial<Note> - correct when revision logic added ***
@@ -219,12 +221,7 @@ export default defineComponent({
           console.log(error.response.data.message)
         }
       }
-    },
-    deleteNotes() {
-      // Deleted Notes delete request will go here...
-      if (this.deletedNoteIds.length > 0) {
-        console.log("DELETED NOTES (IDS) TO BE DELTED::", this.deletedNoteIds);
-      }
+      return
     }
   },
   mounted() {
@@ -237,10 +234,9 @@ export default defineComponent({
   },
   async beforeRouteLeave(to, from, next) {
     // Make API requests here...
-    console.log("MAKE API REQUESTS HERE");
-    // this.newNotes && await this.postNewNotes();
-    await this.patchEditedNotes();
-    // this.deletedNoteIds && await this.deleteNotes();
+;
+    this.postNewNotes();
+    this.patchEditedNotes();
     next();
   }
 });
