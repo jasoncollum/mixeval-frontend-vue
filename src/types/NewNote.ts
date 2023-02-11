@@ -1,5 +1,5 @@
 export default interface NewNote {
-  id: string;
+  id?: string;
   text: string;
   versionId: string;
 }

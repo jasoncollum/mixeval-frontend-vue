@@ -58,6 +58,8 @@ import Note from '@/types/Note';
 import NewNote from '@/types/NewNote';
 import NoteCard from '../components/NoteCard.vue'
 
+const axios = require('axios').default;
+
 export default defineComponent({
   name: 'NotesView',
   components: {
@@ -72,7 +74,7 @@ export default defineComponent({
       newNoteText: '',
       newNoteCount: 0,
       // array of new notes to post
-      newNotes: [] as Array<Partial<NewNote>>,
+      newNotes: [] as Array<{ text: string, versionId: string}>,
       editedNoteIds: [] as Array<string>,
       deletedNoteIds: [] as Array<string>,
     }
@@ -152,9 +154,11 @@ export default defineComponent({
       this.removeNoteFromVersionNotes(noteId);
       console.log("VERSION NOTES::", this.versionNotes);
     },
-    postNewNotes() {
+    async postNewNotes() {
       // ^ method currently called by clicking on Back button ***
       // loop over versionNotes, if id includes 'newNote' remove id and push to newNotes array
+      // const newNotes = [] as Array<{ text: string, versionId: string}>;
+
       this.versionNotes.forEach(note => {
         if (note.id && note.id.includes('newNote')) {
           this.newNotes.push({
@@ -163,14 +167,25 @@ export default defineComponent({
           })
         }
       });
-      
-      // New Notes post request will go here...
-      if (this.newNotes.length > 0) {
-        console.log("VERSION NOTES::", this.versionNotes)
-        console.log("NEW NOTES TO BE POSTED::", this.newNotes)
+      const newNotesToPost = this.newNotes;
+      // New Notes post request...
+      if (newNotesToPost.length > 0) {
+        try {
+          const token = localStorage.getItem('token')
+          const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/notes`,
+            newNotesToPost, 
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          )
+        } catch(error: any) {
+          console.log(error.response.data.message)
+        }
       }
     },
-    putEditedNotes() {
+    async patchEditedNotes() {
       // ^ method currently called by clicking on Back button ***
       // for each editedNoteId, loop over versionNotes and push to editedNotes array
       // *** editedNotes temporarily Partial<Note> - correct when revision logic added ***
@@ -178,13 +193,31 @@ export default defineComponent({
       this.editedNoteIds.forEach(id => {
         let foundNote: Partial<Note> | undefined = this.versionNotes.find(note => note.id === id);
         if (foundNote) {
-          editedNotes.push(foundNote);
+          const editedNote = {
+            id: foundNote.id,
+            text: foundNote.text,
+            versionId: foundNote.versionId
+          }
+          editedNotes.push(editedNote);
         }
       });
 
-      // Edited Notes put request will go here...
+      // Edited Notes patch request...
+      console.log(editedNotes);
       if (editedNotes.length > 0) {
-        console.log("EDITED NOTES TO BE PUT::", editedNotes);
+        try {
+          const token = localStorage.getItem('token')
+          const response = await axios.patch(`${process.env.VUE_APP_ROOT_API}/notes`,
+            editedNotes, 
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          )
+        } catch(error: any) {
+          console.log(error.response.data.message)
+        }
       }
     },
     deleteNotes() {
@@ -202,12 +235,12 @@ export default defineComponent({
       this.showNewNoteInput = this.versionNotes.length < 1;
     }
   },
-  beforeRouteLeave(to, from, next) {
+  async beforeRouteLeave(to, from, next) {
     // Make API requests here...
     console.log("MAKE API REQUESTS HERE");
-    this.postNewNotes();
-    this.putEditedNotes();
-    this.deleteNotes();
+    // this.newNotes && await this.postNewNotes();
+    await this.patchEditedNotes();
+    // this.deletedNoteIds && await this.deleteNotes();
     next();
   }
 });
