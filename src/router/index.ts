@@ -7,6 +7,7 @@ import VersionEdit from '../views/VersionEdit.vue'
 import SignupForm from '../views/SignupForm.vue'
 import SigninForm from '../views/SigninForm.vue'
 import SongView from '../views/SongView.vue'
+import NotesView from '../views/NotesView.vue'
 import store from '../store/index'
 
 const routes: Array<RouteRecordRaw> = [
@@ -65,9 +66,17 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: '/version/edit',
+    path: '/version/:id/edit',
     name: 'versionEdit',
     component: VersionEdit,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/version/:id/notes',
+    name: 'notes',
+    component: NotesView,
     meta: {
       requiresAuth: true
     },

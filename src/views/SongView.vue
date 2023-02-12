@@ -39,6 +39,7 @@
       :songTitle="song.title"
       :artistName="song.artistName"
       :versionNumber="version.number"
+      :versionId="version.id"
       @showForm="handleShowForm"
     />
   </div>
