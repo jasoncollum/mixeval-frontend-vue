@@ -94,10 +94,7 @@ export default defineComponent({
     },
   },
   methods: {
-    // handleAddNewRevision() {
-    //   console.log('ADD NEW REVISION')
-    // },
-    // NOTE logic...
+    // NOTE //////////////////////////////////////////////////// logic...
     toggleShowNewNoteInput(): void {
       this.showNewNoteInput = !this.showNewNoteInput;
     },
@@ -177,9 +174,7 @@ export default defineComponent({
       this.removeNoteFromVersionNotes(noteId);
     },
     async postNewNotes(): Promise<Boolean> {
-      // ^ method currently called by clicking on Back button ***
       // loop over versionNotes, if id includes 'newNote' remove id and push to newNotes array
-      // const newNotes = [] as Array<{ text: string, versionId: string}>;
 
       this.versionNotes.forEach(note => {
         if (note.id && note.id.includes('newNote')) {
@@ -211,7 +206,6 @@ export default defineComponent({
       return hasNewNotes;
     },
     async patchEditedNotes(): Promise<Boolean> {
-      // ^ method currently called by clicking on Back button ***
       // for each editedNoteId, loop over versionNotes and push to editedNotes array
       // *** editedNotes temporarily Partial<Note> - correct when revision logic added ***
       const editedNotes: Partial<Note>[] = [];
@@ -246,11 +240,10 @@ export default defineComponent({
       }
       return hasEditedNotes;
     },
-    // REVISION logic...
+    // REVISION //////////////////////////////////////////////////// logic...
     handleAddNewRevision(text: string, noteId: string): void {
-      console.log('noteId and noteText::', noteId, text)
       // check to see if new revision has text
-      if (text === '') {
+      if (!text) {
         return
       }
       // use the newRevisionCount to assign temporary id to be used for :key when looping
@@ -262,8 +255,6 @@ export default defineComponent({
         noteId,
       }
       const note = this.versionNotes.find(note => note.id === noteId);
-      console.log('note', note)
-      console.log('versionNotes', this.versionNotes)
       if (note) {
         note.revisions.push(newRevision);
       }
@@ -322,7 +313,39 @@ export default defineComponent({
         // REMOVE revision from note revision array in versionNotes array
         this.removeRevisionFromVersionNotes(revisionId, noteId)
       }
-    }
+    },
+    async postNewRevisions() {
+      // search for new revisions versionNotes array
+      this.versionNotes.forEach(note => {
+        note.revisions.forEach(revision => {
+          if (revision.id && revision.id.includes('newRevision')) {
+            this.newRevisions.push({
+              text: revision.text,
+              noteId: revision.noteId
+            })
+          }
+        })
+      });
+      const newRevisionsToPost = [...this.newRevisions];
+      // New Notes post request...
+      const hasNewRevisions = newRevisionsToPost.length > 0;
+      if (hasNewRevisions) {
+        try {
+          const token = localStorage.getItem('token')
+          const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/revisions`,
+            newRevisionsToPost, 
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          )
+        } catch(error: any) {
+          console.log(error.response.data.message)
+        }
+      }
+      return hasNewRevisions;
+    },
   },
   mounted(): void {
     const version = this.song.versions.find(version => version.id === this.versionId) as Version;
@@ -338,7 +361,8 @@ export default defineComponent({
     // Make API requests here...
     const hasNewNotes = await this.postNewNotes();
     const hasEditedNotes = await this.patchEditedNotes();
-    if (hasNewNotes || hasEditedNotes || this.hasDeletedNotes) {
+    const hasNewRevisions = await this.postNewRevisions();
+    if (hasNewNotes || hasEditedNotes || this.hasDeletedNotes || hasNewRevisions) {
       try {
         this.$store.dispatch('requestArtistsWithOpenSongs')
       } catch (error: any) {

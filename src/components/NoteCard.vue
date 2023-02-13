@@ -44,7 +44,6 @@
           class="is-clickable"
         >
           + New Revision
-          <!-- {{showNewRevisionInput ? 'Close' : '+ New Revision'}} -->
         </span>
       </div>
       <div v-show="showNewRevisionInput" class="has-text-centered">
