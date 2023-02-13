@@ -35,6 +35,7 @@ const store = createStore({
   },
   actions: {
     async requestArtistsWithOpenSongs(context) {
+      console.log('Store - fetching artists')
       const token = localStorage.getItem('token')
       const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/artists?hasOpenSongs=true`, {
           headers: {

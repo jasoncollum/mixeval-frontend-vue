@@ -38,6 +38,9 @@
         :note="note"
         @editedNote="handleEditedNote"
         @deletedNote="handleDeletedNote"
+        @addNewRevision="handleAddNewRevision"
+        @editedRevision="handleEditedRevision"
+        @deletedRevision="handleDeletedRevision"
       />
     </div>
 
@@ -57,6 +60,7 @@ import Version from '@/types/Version';
 import Note from '@/types/Note';
 import NewNote from '@/types/NewNote';
 import NoteCard from '../components/NoteCard.vue'
+import Revision from '../types/Revision';
 
 const axios = require('axios').default;
 
@@ -69,13 +73,19 @@ export default defineComponent({
     return {
       versionId: this.$route.params.id as string,
       versionNum: null as number | null,
+      // Notes
       versionNotes: [] as Array<Note | NewNote>,
       showNewNoteInput: true,
       newNoteText: '',
       newNoteCount: 0,
-      // array of new notes to post
       newNotes: [] as Array<{ text: string, versionId: string}>,
       editedNoteIds: [] as Array<string>,
+      hasDeletedNotes: false,
+      // Revisions
+      newRevisionText: '',
+      newRevisionCount: 0,
+      newRevisions: [] as Array<{ text: string, noteId: string }>,
+      editedRevisionIds: [] as Array<string>,
     }
   },
   computed: {
@@ -84,17 +94,21 @@ export default defineComponent({
     },
   },
   methods: {
-    toggleShowNewNoteInput() {
+    // handleAddNewRevision() {
+    //   console.log('ADD NEW REVISION')
+    // },
+    // NOTE logic...
+    toggleShowNewNoteInput(): void {
       this.showNewNoteInput = !this.showNewNoteInput;
     },
-    removeNoteFromVersionNotes(noteId: string) {
+    removeNoteFromVersionNotes(noteId: string): void {
       // helper: removes note from versionNotes array
       const index = this.versionNotes.findIndex(note => note.id === noteId);
       if (index >= 0) {
         this.versionNotes.splice(index, 1);
       }
     },
-    addNewNote() {
+    addNewNote(): void {
       // check to see if new note has text
       if (!this.newNoteText) {
         return
@@ -105,6 +119,7 @@ export default defineComponent({
       const newNote = {
         id: `newNote${(this.newNoteCount).toString()}`,
         text: this.newNoteText,
+        revisions: [],
         versionId: this.versionId
       }
       this.versionNotes.unshift(newNote);
@@ -113,7 +128,9 @@ export default defineComponent({
       // set hasNotes to show notes in case there were previously no notes
       this.showNewNoteInput = this.versionNotes.length < 1;
     },
-    async handleEditedNote(noteId: string, noteText: string) {
+    async handleEditedNote(noteId: string, noteText: string): Promise<void> {
+      console.log('Edited Note Id::', noteId)
+      console.log('Edited Note Text::', noteText)
       if (!noteText) {
         if (!noteId.includes('newNote')) {
           // if no text and not a newnote - delete the note
@@ -122,11 +139,14 @@ export default defineComponent({
             // filter editedNoteIds to REMOVE noteId from array
             this.editedNoteIds = this.editedNoteIds.filter(id => id !== noteId);
             // REMOVE note from versionNotes array
-            this.removeNoteFromVersionNotes(noteId);
+            // this.removeNoteFromVersionNotes(noteId);
           } catch (error: any) {
             console.log(error.response.data.message)
           }
         }
+        // REMOVE note from versionNotes array
+        console.log('NoteId', noteId)
+          this.removeNoteFromVersionNotes(noteId);
       } else {
         if (!noteId.includes('newNote')) {
           // search editedNoteIds, if id not found, PUSH id to array
@@ -137,7 +157,7 @@ export default defineComponent({
         }
       }
     },
-    async handleDeletedNote(noteId: string) {
+    async handleDeletedNote(noteId: string): Promise<void> {
       if (!noteId.includes('newNote')) {
         try {
           const token = localStorage.getItem('token');
@@ -148,14 +168,15 @@ export default defineComponent({
               }
             }
           )
-          // REMOVE note from versionNotes array
-          this.removeNoteFromVersionNotes(noteId);
+          this.hasDeletedNotes = true;
         } catch (error: any) {
           console.log(error.response.data.message)
         }
       }
+      // REMOVE note from versionNotes array
+      this.removeNoteFromVersionNotes(noteId);
     },
-    async postNewNotes(): Promise<void> {
+    async postNewNotes(): Promise<Boolean> {
       // ^ method currently called by clicking on Back button ***
       // loop over versionNotes, if id includes 'newNote' remove id and push to newNotes array
       // const newNotes = [] as Array<{ text: string, versionId: string}>;
@@ -170,7 +191,8 @@ export default defineComponent({
       });
       const newNotesToPost = [...this.newNotes];
       // New Notes post request...
-      if (newNotesToPost.length > 0) {
+      const hasNewNotes = newNotesToPost.length > 0;
+      if (hasNewNotes) {
         console.log('NEW NOTES POSTING', newNotesToPost)
         try {
           const token = localStorage.getItem('token')
@@ -186,8 +208,9 @@ export default defineComponent({
           console.log(error.response.data.message)
         }
       }
+      return hasNewNotes;
     },
-    async patchEditedNotes(): Promise<void> {
+    async patchEditedNotes(): Promise<Boolean> {
       // ^ method currently called by clicking on Back button ***
       // for each editedNoteId, loop over versionNotes and push to editedNotes array
       // *** editedNotes temporarily Partial<Note> - correct when revision logic added ***
@@ -205,8 +228,8 @@ export default defineComponent({
       });
 
       // Edited Notes patch request...
-      console.log(editedNotes);
-      if (editedNotes.length > 0) {
+      const hasEditedNotes = editedNotes.length > 0;
+      if (hasEditedNotes) {
         try {
           const token = localStorage.getItem('token')
           const response = await axios.patch(`${process.env.VUE_APP_ROOT_API}/notes`,
@@ -221,22 +244,107 @@ export default defineComponent({
           console.log(error.response.data.message)
         }
       }
-      return
+      return hasEditedNotes;
+    },
+    // REVISION logic...
+    handleAddNewRevision(text: string, noteId: string): void {
+      console.log('noteId and noteText::', noteId, text)
+      // check to see if new revision has text
+      if (text === '') {
+        return
+      }
+      // use the newRevisionCount to assign temporary id to be used for :key when looping
+      this.newRevisionCount++;
+      // create a new revision object and push to Note's Revisions array
+      const newRevision: Revision = {
+        id: `newRevision${(this.newRevisionCount).toString()}`,
+        text,
+        noteId,
+      }
+      const note = this.versionNotes.find(note => note.id === noteId);
+      console.log('note', note)
+      console.log('versionNotes', this.versionNotes)
+      if (note) {
+        note.revisions.push(newRevision);
+      }
+    },
+    async handleEditedRevision({revisionId, revisionText, noteId}: {revisionId: string, revisionText: string, noteId: string}) {
+      if (revisionText.length === 0) {
+        console.log('REMOVING REV TEXT')
+        if (!revisionId.includes('newRevision')) {
+          // if no text and not a new revision - delete the note
+          try {
+            await this.handleDeletedRevision(revisionId, noteId);
+            // filter editedRevisionIds to REMOVE revisionId from array
+            this.editedRevisionIds = this.editedRevisionIds.filter(id => id !== revisionId);
+          } catch (error: any) {
+            console.log(error.response.data.message)
+          }
+        }
+        // REMOVE revision from versionNotes array
+        this.removeRevisionFromVersionNotes(revisionId, noteId);
+      } else {
+        if (!revisionId.includes('newRevision')) {
+          // search editedNoteIds, if id not found, PUSH id to array
+          const idFound = this.editedRevisionIds.find(id => id === revisionId);
+          if (!idFound) {
+            this.editedRevisionIds.push(revisionId);
+          }
+        }
+      }
+    },
+    removeRevisionFromVersionNotes(revisionId: string, noteId: string) {
+      // helper: removes revision from note.revisions array with versionNotes array
+      let note = this.versionNotes.find(note => note.id === noteId);
+      if (note) {
+        const index = note.revisions.findIndex(revision => revision.id === revisionId);
+        if (index >= 0) {
+          note.revisions.splice(index, 1);
+        }
+      }
+      console.log('Updated versionNotes', this.versionNotes)
+    },
+    async handleDeletedRevision(revisionId: string, noteId: string) {
+      if (!revisionId.includes('newRevision')) {
+        try {
+          // const token = localStorage.getItem('token');
+          // const response = await axios.delete(`${process.env.VUE_APP_ROOT_API}/revisions/${revisionId}`,
+          //   {
+          //     headers: {
+          //       'Authorization': `Bearer ${token}`
+          //     }
+          //   }
+          // )
+        } catch (error: any) {
+          console.log(error.response.data.message)
+        }
+        console.log('HANDLE DELETED VERSION', revisionId, noteId)
+        // REMOVE revision from note revision array in versionNotes array
+        this.removeRevisionFromVersionNotes(revisionId, noteId)
+      }
     }
   },
-  mounted() {
+  mounted(): void {
     const version = this.song.versions.find(version => version.id === this.versionId) as Version;
+    console.log('NOTESVIEW VERSION FOUND', version)
     if (version) {
       this.versionNum = version.number;
       this.versionNotes = [...version.notes];
+      console.log('VERSIONNOTES ARRAY::', this.versionNotes)
       this.showNewNoteInput = this.versionNotes.length < 1;
     }
   },
-  async beforeRouteLeave(to, from, next) {
+  async beforeRouteLeave(to, from, next): Promise<void> {
     // Make API requests here...
-;
-    this.postNewNotes();
-    this.patchEditedNotes();
+    const hasNewNotes = await this.postNewNotes();
+    const hasEditedNotes = await this.patchEditedNotes();
+    if (hasNewNotes || hasEditedNotes || this.hasDeletedNotes) {
+      try {
+        this.$store.dispatch('requestArtistsWithOpenSongs')
+      } catch (error: any) {
+        console.log(error.response.data.message)
+      }
+    }
     next();
   }
 });
