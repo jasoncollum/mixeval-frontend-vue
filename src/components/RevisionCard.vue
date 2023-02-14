@@ -5,7 +5,7 @@
         <span @click="revision['edit'] = !edit">{{revision.text}}</span>
         <span 
           class="is-pulled-right is-clickable" 
-          @click="$emit('deletedRevision', revision.id, revision.noteId)"
+          @click="$emit('deletedRevision', { revisionId: revision.id, noteId: revision.noteId })"
         >
           delete
         </span>
@@ -19,10 +19,10 @@
         <div class="is-flex is-justify-content-flex-end">
           <div 
             class="is-clickable" 
-            @click="revision.edit = false; $emit('editedRevision', 
+            @click="$emit('editedRevision', 
             {
               revisionId: revision.id, revisionText: revision.text, noteId: revision.noteId
-            })"
+            }); revision.edit = false; "
           >Done</div>
         </div>
       </div>

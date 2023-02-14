@@ -19,7 +19,7 @@
         <div class="is-flex is-justify-content-flex-end">
           <div 
             class="is-clickable" 
-            @click="note.edit = false; $emit('editedNote', note.id, note.text)"
+            @click="$emit('editedNote', note.id, note.text); note.edit = false;"
           >Done</div>
         </div>
       </div>
@@ -32,7 +32,7 @@
         :key="revision.id"
         :revision="revision"
         @editedRevision="passEditedRevision"
-        @deletedRevision="$emit('deletedRevision', obj)"
+        @deletedRevision="passDeletedRevision"
       />
     </div>
 
@@ -94,8 +94,11 @@ export default defineComponent({
       this.newRevisionText = '',
       this.toggleShowNewRevisionInput();
     },
-    passEditedRevision(revObj: {revisionId: string, revisionText: string, notedId: string}) {
+    passEditedRevision(revObj: {revisionId: string, revisionText: string, noteId: string}) {
       this.$emit('editedRevision', revObj)
+    },
+    passDeletedRevision(revObj: { revisionId: string, noteId: string }) {
+      this.$emit('deletedRevision', revObj)
     }
   }
 })

@@ -126,8 +126,6 @@ export default defineComponent({
       this.showNewNoteInput = this.versionNotes.length < 1;
     },
     async handleEditedNote(noteId: string, noteText: string): Promise<void> {
-      console.log('Edited Note Id::', noteId)
-      console.log('Edited Note Text::', noteText)
       if (!noteText) {
         if (!noteId.includes('newNote')) {
           // if no text and not a newnote - delete the note
@@ -260,12 +258,12 @@ export default defineComponent({
       }
     },
     async handleEditedRevision({revisionId, revisionText, noteId}: {revisionId: string, revisionText: string, noteId: string}) {
-      if (revisionText.length === 0) {
+      if (!revisionText) {
         console.log('REMOVING REV TEXT')
         if (!revisionId.includes('newRevision')) {
           // if no text and not a new revision - delete the note
           try {
-            await this.handleDeletedRevision(revisionId, noteId);
+            await this.handleDeletedRevision({revisionId, noteId});
             // filter editedRevisionIds to REMOVE revisionId from array
             this.editedRevisionIds = this.editedRevisionIds.filter(id => id !== revisionId);
           } catch (error: any) {
@@ -276,6 +274,7 @@ export default defineComponent({
         this.removeRevisionFromVersionNotes(revisionId, noteId);
       } else {
         if (!revisionId.includes('newRevision')) {
+          console.log('EDITED REVISION', revisionId, noteId)
           // search editedNoteIds, if id not found, PUSH id to array
           const idFound = this.editedRevisionIds.find(id => id === revisionId);
           if (!idFound) {
@@ -295,17 +294,18 @@ export default defineComponent({
       }
       console.log('Updated versionNotes', this.versionNotes)
     },
-    async handleDeletedRevision(revisionId: string, noteId: string) {
+    async handleDeletedRevision({revisionId, noteId}: {revisionId: string, noteId: string}) {
+      console.log('DELETE IDS', revisionId, noteId)
       if (!revisionId.includes('newRevision')) {
         try {
-          // const token = localStorage.getItem('token');
-          // const response = await axios.delete(`${process.env.VUE_APP_ROOT_API}/revisions/${revisionId}`,
-          //   {
-          //     headers: {
-          //       'Authorization': `Bearer ${token}`
-          //     }
-          //   }
-          // )
+          const token = localStorage.getItem('token');
+          const response = await axios.delete(`${process.env.VUE_APP_ROOT_API}/revisions/${revisionId}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          )
         } catch (error: any) {
           console.log(error.response.data.message)
         }
@@ -349,11 +349,9 @@ export default defineComponent({
   },
   mounted(): void {
     const version = this.song.versions.find(version => version.id === this.versionId) as Version;
-    console.log('NOTESVIEW VERSION FOUND', version)
     if (version) {
       this.versionNum = version.number;
       this.versionNotes = [...version.notes];
-      console.log('VERSIONNOTES ARRAY::', this.versionNotes)
       this.showNewNoteInput = this.versionNotes.length < 1;
     }
   },
