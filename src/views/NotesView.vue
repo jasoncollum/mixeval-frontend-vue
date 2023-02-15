@@ -54,13 +54,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, watchEffect } from 'vue';
 import SongWithArtist from '@/types/SongWithArtist';
 import Version from '@/types/Version';
 import Note from '@/types/Note';
 import NewNote from '@/types/NewNote';
 import NoteCard from '../components/NoteCard.vue'
 import Revision from '../types/Revision';
+import Song from '@/types/Song';
 
 const axios = require('axios').default;
 
@@ -71,14 +72,15 @@ export default defineComponent({
   },
   data() {
     return {
+      token: null as string | null,
       versionId: this.$route.params.id as string,
       versionNum: null as number | null,
       // Notes
       versionNotes: [] as Array<Note | NewNote>,
       showNewNoteInput: true,
       newNoteText: '',
-      newNoteCount: 0,
-      newNotes: [] as Array<{ text: string, versionId: string}>,
+      // newNoteCount: 0,
+      // newNotes: [] as Array<{ text: string, versionId: string}>,
       editedNoteIds: [] as Array<string>,
       hasDeletedNotes: false,
       // Revisions
@@ -86,10 +88,12 @@ export default defineComponent({
       newRevisionCount: 0,
       newRevisions: [] as Array<{ text: string, noteId: string }>,
       editedRevisionIds: [] as Array<string>,
+      hasDeletedRevisions: false,
     }
   },
   computed: {
     song(): SongWithArtist {
+      console.log('CPU PROP FIRED')
       return this.$store.getters.getSongWithArtistByVersionId(this.$route.params.id as string);
     },
   },
@@ -105,107 +109,127 @@ export default defineComponent({
         this.versionNotes.splice(index, 1);
       }
     },
-    addNewNote(): void {
+    async addNewNote(): Promise<void> {
+      this.toggleShowNewNoteInput();
       // check to see if new note has text
-      if (!this.newNoteText) {
-        return
+      if (this.newNoteText) {
+        try {
+          // const token = localStorage.getItem('token');
+          const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/notes`,
+            {
+              text: this.newNoteText,
+              versionId: this.versionId,
+            }, 
+            {
+              headers: {
+                'Authorization': `Bearer ${this.token}`
+              }
+            }
+          )
+          console.log('RESPONSE', response.data)
+          this.newNoteText = '';
+          this.editedNoteIds.length > 0 && await this.patchEditedNotes();
+          this.newRevisionCount > 0 && await this.postNewRevisions();
+          await this.$store.dispatch('requestArtistsWithOpenSongs');
+        } catch (error: any) {
+          console.log(error.response.data.message)
+        }
+        // if edited notes, make api requests
+        // this.editedNoteIds.length > 0 && await this.patchEditedNotes();
+        // this.newRevisionCount > 0 && await this.postNewRevisions();
+        // try {
+        //   this.$store.dispatch('requestArtistsWithOpenSongs')
+        // } catch (error: any) {
+        //   console.log(error.response.data.message)
+        // }
+        // this.editedRevisionIds.length > 0 && await this.patchEditedRevisions();
       }
+      // OLD addNewNote LOGIC -----
       // use the newNoteCount to assign temporary id to be used for :key when looping
-      this.newNoteCount++;
+      // this.newNoteCount++;
       // create a new note object and push to versionNotes
-      const newNote = {
-        id: `newNote${(this.newNoteCount).toString()}`,
-        text: this.newNoteText,
-        revisions: [],
-        versionId: this.versionId
-      }
-      this.versionNotes.unshift(newNote);
+      // const newNote = {
+      //   id: `newNote${(this.newNoteCount).toString()}`,
+      //   text: this.newNoteText,
+      //   revisions: [],
+      //   versionId: this.versionId
+      // }
+      // this.versionNotes.unshift(newNote);
       // reset newNoteText value to empty string
-      this.newNoteText = '';
+      // this.newNoteText = '';
       // set hasNotes to show notes in case there were previously no notes
-      this.showNewNoteInput = this.versionNotes.length < 1;
+      // this.showNewNoteInput = this.versionNotes.length < 1;
     },
     async handleEditedNote(noteId: string, noteText: string): Promise<void> {
       if (!noteText) {
-        if (!noteId.includes('newNote')) {
-          // if no text and not a newnote - delete the note
-          try {
-            await this.handleDeletedNote(noteId);
-            // filter editedNoteIds to REMOVE noteId from array
-            this.editedNoteIds = this.editedNoteIds.filter(id => id !== noteId);
-            // REMOVE note from versionNotes array
-            // this.removeNoteFromVersionNotes(noteId);
-          } catch (error: any) {
-            console.log(error.response.data.message)
-          }
+        // if no text - delete the note
+        try {
+          await this.handleDeletedNote(noteId);
+          // filter editedNoteIds to REMOVE noteId from array
+          this.editedNoteIds = this.editedNoteIds.filter(id => id !== noteId);
+        } catch (error: any) {
+          console.log(error.response.data.message)
         }
-        // REMOVE note from versionNotes array
-        console.log('NoteId', noteId)
-          this.removeNoteFromVersionNotes(noteId);
+      // REMOVE note from versionNotes array
+      // this.removeNoteFromVersionNotes(noteId);
       } else {
-        if (!noteId.includes('newNote')) {
-          // search editedNoteIds, if id not found, PUSH id to array
-          const idFound = this.editedNoteIds.find(id => id === noteId);
-          if (!idFound) {
-            this.editedNoteIds.push(noteId);
-          }
+        // if text search editedNoteIds, if id not found, PUSH id to array
+        const idFound = this.editedNoteIds.find(id => id === noteId);
+        if (!idFound) {
+          this.editedNoteIds.push(noteId);
         }
       }
     },
     async handleDeletedNote(noteId: string): Promise<void> {
-      if (!noteId.includes('newNote')) {
-        try {
-          const token = localStorage.getItem('token');
-          const response = await axios.delete(`${process.env.VUE_APP_ROOT_API}/notes/${noteId}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${token}`
-              }
+      try {
+        // const token = localStorage.getItem('token');
+        const response = await axios.delete(`${process.env.VUE_APP_ROOT_API}/notes/${noteId}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
             }
-          )
-          this.hasDeletedNotes = true;
-        } catch (error: any) {
-          console.log(error.response.data.message)
-        }
+          }
+        )
+        this.hasDeletedNotes = true;
+      } catch (error: any) {
+        console.log(error.response.data.message)
       }
       // REMOVE note from versionNotes array
       this.removeNoteFromVersionNotes(noteId);
     },
-    async postNewNotes(): Promise<Boolean> {
-      // loop over versionNotes, if id includes 'newNote' remove id and push to newNotes array
+    // async postNewNotes(): Promise<Boolean> {
+    //   // loop over versionNotes, if id includes 'newNote' remove id and push to newNotes array
 
-      this.versionNotes.forEach(note => {
-        if (note.id && note.id.includes('newNote')) {
-          this.newNotes.push({
-            text: note.text,
-            versionId: note.versionId
-          })
-        }
-      });
-      const newNotesToPost = [...this.newNotes];
-      // New Notes post request...
-      const hasNewNotes = newNotesToPost.length > 0;
-      if (hasNewNotes) {
-        console.log('NEW NOTES POSTING', newNotesToPost)
-        try {
-          const token = localStorage.getItem('token')
-          const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/notes`,
-            newNotesToPost, 
-            {
-              headers: {
-                'Authorization': `Bearer ${token}`
-              }
-            }
-          )
-        } catch(error: any) {
-          console.log(error.response.data.message)
-        }
-      }
-      return hasNewNotes;
-    },
+    //   this.versionNotes.forEach(note => {
+    //     if (note.id && note.id.includes('newNote')) {
+    //       this.newNotes.push({
+    //         text: note.text,
+    //         versionId: note.versionId
+    //       })
+    //     }
+    //   });
+    //   const newNotesToPost = [...this.newNotes];
+    //   // New Notes post request...
+    //   const hasNewNotes = newNotesToPost.length > 0;
+    //   if (hasNewNotes) {
+    //     try {
+    //       const token = localStorage.getItem('token')
+    //       const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/notes`,
+    //         newNotesToPost, 
+    //         {
+    //           headers: {
+    //             'Authorization': `Bearer ${token}`
+    //           }
+    //         }
+    //       )
+    //     } catch(error: any) {
+    //       console.log(error.response.data.message)
+    //     }
+    //   }
+    //   return hasNewNotes;
+    // },
     async patchEditedNotes(): Promise<Boolean> {
       // for each editedNoteId, loop over versionNotes and push to editedNotes array
-      // *** editedNotes temporarily Partial<Note> - correct when revision logic added ***
       const editedNotes: Partial<Note>[] = [];
       this.editedNoteIds.forEach(id => {
         let foundNote: Partial<Note> | undefined = this.versionNotes.find(note => note.id === id);
@@ -213,6 +237,7 @@ export default defineComponent({
           const editedNote = {
             id: foundNote.id,
             text: foundNote.text,
+            revisions: foundNote.revisions,
             versionId: foundNote.versionId
           }
           editedNotes.push(editedNote);
@@ -223,12 +248,12 @@ export default defineComponent({
       const hasEditedNotes = editedNotes.length > 0;
       if (hasEditedNotes) {
         try {
-          const token = localStorage.getItem('token')
+          // const token = localStorage.getItem('token')
           const response = await axios.patch(`${process.env.VUE_APP_ROOT_API}/notes`,
             editedNotes, 
             {
               headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${this.token}`
               }
             }
           )
@@ -298,14 +323,15 @@ export default defineComponent({
       console.log('DELETE IDS', revisionId, noteId)
       if (!revisionId.includes('newRevision')) {
         try {
-          const token = localStorage.getItem('token');
+          // const token = localStorage.getItem('token');
           const response = await axios.delete(`${process.env.VUE_APP_ROOT_API}/revisions/${revisionId}`,
             {
               headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${this.token}`
               }
             }
           )
+          this.hasDeletedRevisions = true;
         } catch (error: any) {
           console.log(error.response.data.message)
         }
@@ -331,12 +357,12 @@ export default defineComponent({
       const hasNewRevisions = newRevisionsToPost.length > 0;
       if (hasNewRevisions) {
         try {
-          const token = localStorage.getItem('token')
+          // const token = localStorage.getItem('token')
           const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/revisions`,
             newRevisionsToPost, 
             {
               headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${this.token}`
               }
             }
           )
@@ -348,27 +374,59 @@ export default defineComponent({
     },
   },
   mounted(): void {
-    const version = this.song.versions.find(version => version.id === this.versionId) as Version;
-    if (version) {
-      this.versionNum = version.number;
-      this.versionNotes = [...version.notes];
-      this.showNewNoteInput = this.versionNotes.length < 1;
-    }
-  },
-  async beforeRouteLeave(to, from, next): Promise<void> {
-    // Make API requests here...
-    const hasNewNotes = await this.postNewNotes();
-    const hasEditedNotes = await this.patchEditedNotes();
-    const hasNewRevisions = await this.postNewRevisions();
-    if (hasNewNotes || hasEditedNotes || this.hasDeletedNotes || hasNewRevisions) {
-      try {
-        this.$store.dispatch('requestArtistsWithOpenSongs')
-      } catch (error: any) {
-        console.log(error.response.data.message)
+    console.log('MOUNTED')
+    // check that song is not an empty object
+    if (Object.keys(this.song).length !== 0 && this.song.constructor === Object) {
+      const version = this.song.versions.find(version => version.id === this.versionId) as Version;
+      if (version) {
+        this.versionNum = version.number;
+        this.versionNotes = [...version.notes];
+        this.showNewNoteInput = this.versionNotes.length < 1;
+        this.token = localStorage.getItem('token');
       }
     }
-    next();
-  }
+  },
+  watch: {
+    song() {
+      console.log('WATCH FIRED')
+      // check that song is not an empty object
+      if (Object.keys(this.song).length !== 0 && this.song.constructor === Object) {
+        const version = this.song.versions.find(version => version.id === this.versionId) as Version;
+        if (version) {
+          this.versionNum = version.number;
+          this.versionNotes = [...version.notes];
+          this.showNewNoteInput = this.versionNotes.length < 1;
+        }
+      console.log('INSIDE THE WATCH')
+      }
+    }
+  },
+  created() {
+    
+  },
+  // async beforeRouteLeave(to, from, next): Promise<void> {
+  //   // Make API requests here...
+  //   const hasEditedNotes = await this.patchEditedNotes();
+  //   const hasNewRevisions = await this.postNewRevisions();
+  //   console.log('hasEditedNotes', hasEditedNotes)
+  //   console.log('hasNewRevisions', hasNewRevisions)
+  //   console.log('hasDeletedNotes', this.hasDeletedNotes)
+  //   console.log('hasDeletedRevisions', this.hasDeletedRevisions)
+  //   console.log(this.$router.options.history.base)
+  //   console.log('ROUTER', this.$router)
+  //   if (
+  //     hasEditedNotes || 
+  //     this.hasDeletedNotes || 
+  //     hasNewRevisions || 
+  //     this.hasDeletedRevisions) {
+  //     try {
+  //       await this.$store.dispatch('requestArtistsWithOpenSongs')
+  //     } catch (error: any) {
+  //       console.log(error.response.data.message)
+  //     }
+  //   }
+  //   next();
+  // }
 });
 </script>
 
