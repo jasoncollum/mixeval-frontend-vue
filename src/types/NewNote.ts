@@ -1,5 +1,8 @@
+import Revision from './Revision';
+
 export default interface NewNote {
-  id?: string;
+  id: string;
   text: string;
+  revisions: Revision[];
   versionId: string;
 }

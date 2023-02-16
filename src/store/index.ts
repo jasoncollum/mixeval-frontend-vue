@@ -35,6 +35,7 @@ const store = createStore({
   },
   actions: {
     async requestArtistsWithOpenSongs(context) {
+      console.log('Store - fetching artists')
       const token = localStorage.getItem('token')
       const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/artists?hasOpenSongs=true`, {
           headers: {
@@ -43,9 +44,11 @@ const store = createStore({
         }
       )
       const artists: Artist[] = response.data
+      console.log('Fetched Data:', artists)
       context.commit('setArtists', artists)
     },
     async logoutUser(context) {
+      console.log('LOG OUT')
       await localStorage.clear();
       context.commit('logoutUser');
     }
@@ -68,8 +71,9 @@ const store = createStore({
       return foundSong;
     },
     getSongWithArtistByVersionId: (state) => (versionId: string) => {
-      let foundSong = {} as SongWithArtist;
-      state.artists.forEach(artist => {
+      if (state.artists) {
+        let foundSong = {} as SongWithArtist;
+        state.artists.forEach(artist => {
         artist.songs.forEach(song => {
           song.versions.forEach(version => {
             if (version.id === versionId) {
@@ -84,6 +88,7 @@ const store = createStore({
         })
       })
       return foundSong;
+      }
     },
   },
   modules: {
