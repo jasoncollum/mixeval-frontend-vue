@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <div class="mb-6">
-      <div v-if="!note.edit">
-        <span @click="note['edit'] = !edit">{{note.text}}</span>
+  <div class="note-card px-4">
+    <div class="">
+      <div class="single-note-container" v-if="!note.edit">
+        <span class="has-text-black-bis" @click="note['edit'] = !edit">{{note.text}}</span>
         <span 
-          class="is-pulled-right is-clickable" 
+          class="delete-note-btn has-text-grey is-pulled-right is-clickable" 
           @click="$emit('deletedNote', note.id)"
         >
           delete
@@ -26,22 +26,24 @@
     </div>
     
     <!-- Revisions section -->
-    <div id="revision-container">
-      <RevisionCard 
-        v-for="revision in note.revisions"
-        :key="revision.id"
-        :revision="revision"
-        @editedRevision="passEditedRevision"
-        @deletedRevision="passDeletedRevision"
-      />
+    <div class="ml-4">
+      <div>
+        <RevisionCard 
+          v-for="revision in note.revisions"
+          :key="revision.id"
+          :revision="revision"
+          @editedRevision="passEditedRevision"
+          @deletedRevision="passDeletedRevision"
+        />
+      </div>
     </div>
 
     <!-- Create New Revision textarea -->
-    <div class="mt-5 mb-6">
-      <div v-if="!showNewRevisionInput" class="mb-2">
+    <div class="ml-5">
+      <div v-if="!showNewRevisionInput" class="mb-6">
         <span 
           @click="toggleShowNewRevisionInput" 
-          class="is-clickable"
+          class="is-clickable has-text-grey-light"
         >
           + New Revision
         </span>
@@ -61,6 +63,7 @@
         </div>
       </div>
     </div>
+    <!-- <hr class="note-card-hr"/> -->
   </div>
 </template>
 
@@ -103,3 +106,18 @@ export default defineComponent({
   }
 })
 </script>
+
+<style>
+.delete-note-btn {
+  display: none;
+}
+
+.single-note-container:hover .delete-note-btn {
+  display: block;
+}
+
+.note-card-hr {
+  width: 33%;
+  margin: 0 auto 1.5rem auto;
+}
+</style>
