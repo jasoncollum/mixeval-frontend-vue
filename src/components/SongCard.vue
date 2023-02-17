@@ -1,5 +1,5 @@
 <template>
-  <div class="song-card-row-container is-flex is-justify-content-space-between">
+  <div class="song-card-row-container is-clickable is-flex is-justify-content-space-between">
     <div class="card-container is-flex">
       <figure class="image is-48x48 mx-1 my-1">
         <img src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
@@ -51,7 +51,6 @@ export default defineComponent({
 
 <style>
 .song-card-row-container:hover {
-  cursor: pointer;
   background-color: rgb(248, 247, 247);
 }
 </style>

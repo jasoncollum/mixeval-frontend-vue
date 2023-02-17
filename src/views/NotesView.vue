@@ -1,5 +1,6 @@
 <template>
-  <div class="mx-4 my-4">
+  <div class="my-4">
+    <div class="container">
     <div class="mb-5">
       <div class="has-text-centered" v-if="song && versionNum">
         {{song.title}} MIX V{{versionNum}} by {{song.artistName}}
@@ -8,30 +9,30 @@
     </div>
 
     <!-- Create New Note textarea -->
-    <div class="mt-5 mb-6">
-      <div class="mb-2">
+    <div class="has-text-centered">
+      <div class="mb-3">
         <span 
           @click="toggleShowNewNoteInput" 
-          class="is-clickable"
+          class="is-clickable has-text-grey"
         >
           {{showNewNoteInput ? 'Close' : '+ New Note'}}
         </span>
       </div>
       <div v-show="showNewNoteInput" class="has-text-centered">
         <textarea 
-          class="textarea mb-2" 
+          class="textarea" 
           v-model="newNoteText" 
           placeholder="Enter a note..."
         >
         </textarea>
-        <div class="is-flex is-justify-content-flex-end">
-          <div class="is-clickable" @click="addNewNote">Done</div>
+        <div class="is-flex is-justify-content-flex-end mt-3">
+          <div class="is-clickable has-text-grey" @click="addNewNote">Done</div>
         </div>
       </div>
     </div>
 
     <!-- Notes section -->
-    <div id="notes-container">
+    <div id="" class="mt-4">
       <NoteCard 
         v-for="note in versionNotes"
         :key="note.id"
@@ -44,12 +45,13 @@
       />
     </div>
 
-    <p class="has-text-centered">
+    <div class="has-text-centered">
       <span 
         class="is-clickable" 
         @click="$router.go(-1)"
       >Back</span>
-    </p>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -91,7 +93,6 @@ export default defineComponent({
   },
   computed: {
     song(): SongWithArtist {
-      console.log('CPU PROP FIRED')
       return this.$store.getters.getSongWithArtistByVersionId(this.$route.params.id as string);
     },
   },
@@ -355,7 +356,6 @@ export default defineComponent({
     },
   },
   mounted(): void {
-    console.log('MOUNTED')
     // check that song is not an empty object
     if (Object.keys(this.song).length !== 0 && this.song.constructor === Object) {
       const version = this.song.versions.find(version => version.id === this.versionId) as Version;
@@ -369,7 +369,6 @@ export default defineComponent({
   },
   watch: {
     song() {
-      console.log('WATCH FIRED')
       // check that song is not an empty object
       if (Object.keys(this.song).length !== 0 && this.song.constructor === Object) {
         const version = this.song.versions.find(version => version.id === this.versionId) as Version;
@@ -405,5 +404,5 @@ export default defineComponent({
 </script>
 
 <style>
-  
+
 </style>

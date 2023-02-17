@@ -96,11 +96,17 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.newVersionNumber = this.song.versions.length + 1;
-  },
-  watchEffect: {
-    song() {
+    // check that song is not an empty object
+    if (Object.keys(this.song).length !== 0 && this.song.constructor === Object) {
       this.newVersionNumber = this.song.versions.length + 1;
+    }
+  },
+  watch: {
+    song() {
+      // check that song is not an empty object
+      if (Object.keys(this.song).length !== 0 && this.song.constructor === Object) {
+        this.newVersionNumber = this.song.versions.length + 1;
+      }
     }
   }
 });

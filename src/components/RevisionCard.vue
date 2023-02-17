@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="mb-6">
-      <div v-if="!revision.edit">
+    <div class="pl-3">
+      <div class="single-revision-container" v-if="!revision.edit">
         <span @click="revision['edit'] = !edit">{{revision.text}}</span>
-        <span 
-          class="is-pulled-right is-clickable" 
+          <span
+          class="delete-revision-btn has-text-grey is-pulled-right is-clickable"
           @click="$emit('deletedRevision', { revisionId: revision.id, noteId: revision.noteId })"
         >
           delete
@@ -29,7 +29,7 @@
     </div>
   </div>
 </template>
-
+// class="delete-revision-btn is-pulled-right is-clickable"
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import Revision from '@/types/Revision';
@@ -44,3 +44,13 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.delete-revision-btn {
+  display: none;
+}
+
+.single-revision-container:hover .delete-revision-btn {
+  display: inline-block;
+}
+</style>
