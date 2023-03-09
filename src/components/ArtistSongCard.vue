@@ -1,10 +1,8 @@
 import { defineComponent } from 'vue';
 <template>
   <div class="card-container is-flex">
-    <!-- <img v-if="imageUrl" :src="imageUrl" />
-    <img v-else src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" /> -->
-    <!-- temporary image url -->
-    <figure class="image is-48x48 mx-1 my-1">
+    <figure class="image is-48x48 is-clipped mx-1 my-1">
+      <!-- <img v-if="artistImage" :src="artistImage" /> -->
       <img src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
     </figure>
     <div v-if="songTitle" class="mx-1 my-1">
@@ -30,6 +28,10 @@ export default defineComponent({
   props: {
     artistName: {
       required: true,
+      type: String
+    },
+    artistImage: {
+      required: false,
       type: String
     },
     artistSongCount: {

@@ -5,7 +5,7 @@
     <input type="email" required v-model="email" />
     
     <label>Password:</label>
-    <input type="password" required v-model="password" />
+    <input type="password" autocomplete="on" required v-model="password" />
     <div v-if="passwordError" class="error">{{ passwordError }}</div>
 
     <div class="submit">

@@ -1,7 +1,4 @@
 <template>
-  <div id="waveform" class="has-text-centered">
-    This is the Song View ... Audio Wave Form will go here...
-  </div>
   <nav class="navbar is-transparent">
     
     <div class="navbar-end">
@@ -13,7 +10,7 @@
     </div>
   </nav>
 
-  <!-- New Version Modal -->
+  <!-- New Version Form -->
   <div v-if="showForm">
     <form @submit.prevent="handleCreateVersion">
       <div class="has-text-centered">{{song.title}}</div>
@@ -21,12 +18,24 @@
       <label>New Version Number:</label>
       <input type="number" v-model="newVersionNumber" required />
 
+      <!-- <label>Upload MP3 Audio</label> -->
+      <input 
+        style="display: none" 
+        type="file" accept=".mp3" 
+        @change="onFileSelected" 
+        ref="fileInput"
+      />
+      <div>
+        <span class="is-clickable" @click="$refs.fileInput.click()">Upload An Mp3 : </span>
+        <span v-if="this.selectedFile">{{selectedFile.name}}</span>
+      </div>
+
       <div class="submit">
         <button class="button is-success is-light is-rounded">Create Version</button>
       </div>
 
       <div>
-        <p class="is-size-7 has-text-centered cancel" @click="handleClose">Cancel</p>
+        <p class="is-size-7 has-text-centered cancel" @click="handleHideForm">Cancel</p>
       </div>
     </form>
   </div>
@@ -38,7 +47,9 @@
       :key="version.id"
       :songTitle="song.title"
       :artistName="song.artistName"
+      :artistImage="song.artistImage"
       :versionNumber="version.number"
+      :audioFileName="version.audioFileName"
       :versionId="version.id"
       @showForm="handleShowForm"
     />
@@ -49,8 +60,9 @@
 import { defineComponent } from 'vue';
 import SongCard from '../components/SongCard.vue'
 import SongWithArtist from '@/types/SongWithArtist';
+import { audioFileUpload, getAudioFile } from '../aws';
+import axios from 'axios';
 
-const axios = require('axios').default;
 
 export default defineComponent({
   name: 'SongView',
@@ -60,7 +72,8 @@ export default defineComponent({
   data() {
     return {
       showForm: false,
-      newVersionNumber: null as Number | null
+      newVersionNumber: null as number | null,
+      selectedFile: null as any,    // TYPESCRIPT selectedFile
     }
   },
   computed: {
@@ -72,27 +85,46 @@ export default defineComponent({
     handleShowForm() {
       this.showForm = true;
     },
-    handleClose() {
+    handleHideForm() {
       this.showForm = false;
     },
     async handleCreateVersion() {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/versions`, {
-          songId: this.song.id,
-          number: this.newVersionNumber,
-        },
-        {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
+        // Upload audio file to aws s3 bucket
+        if (this.selectedFile && this.selectedFile.type === 'audio/mpeg') {
+          const username = this.$store.state.username;
+          const artistName = this.song.artistName;
+          const songTitle = this.song.title;
+          const result = await audioFileUpload(this.selectedFile, username, artistName, songTitle);
+
+          if (result && result.statusText === 'OK') {
+            // Post request to create new version in db
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/versions`, {
+              songId: this.song.id,
+              number: this.newVersionNumber,
+              audioFileName: this.selectedFile.name as string
+              },
+              {
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              }
+            )
+            this.$store.dispatch('requestArtistsWithOpenSongs');
           }
-        )
-        this.$store.dispatch('requestArtistsWithOpenSongs');
+        }
       } catch (error) {
         console.log(error)
       }
       this.showForm = false;
+    },
+    onFileSelected(event: Event) {
+      const target = event.target as HTMLInputElement & EventTarget;
+      if (target.files) {
+        this.selectedFile = target.files[0];
+      }
+      console.log(this.selectedFile)
     }
   },
   mounted() {
@@ -100,6 +132,7 @@ export default defineComponent({
     if (Object.keys(this.song).length !== 0 && this.song.constructor === Object) {
       this.newVersionNumber = this.song.versions.length + 1;
     }
+    // getAudioFile('user2', 'The Uh Ohs', 'Try Again', 'Intro Music.mp3')
   },
   watch: {
     song() {
@@ -112,11 +145,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
-#waveform {
-  background-color: rgb(241, 246, 248);
-  height: 148px;
-}
+<style scoped>
 .orderby-select {
   border-bottom: none;
 }

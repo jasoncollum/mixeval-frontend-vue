@@ -9,7 +9,7 @@
     <input type="text" v-model="image_url" />
 
     <div class="submit">
-      <button class="button is-rounded">Submit</button>
+      <button class="button is-rounded">Create Artist</button>
     </div>
 
     <div class="is-size-7 has-text-centered">

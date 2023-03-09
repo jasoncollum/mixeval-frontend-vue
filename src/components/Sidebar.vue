@@ -30,7 +30,8 @@
       <ArtistSongCard 
         v-for="artist in artists"
         :key="artist.id" 
-        :artistName="artist.name"  
+        :artistName="artist.name" 
+        :artistImage="artist.image_url" 
         :artistSongCount="artist.songs.length"
       />
     </div>
@@ -40,6 +41,7 @@
         :key="song.id" 
         :songTitle="song.title"
         :artistName="song.artistName"
+        :artistImage="song.artistImage"
         @click="handleSongCardClick(song.id)"
       />
     </div>
