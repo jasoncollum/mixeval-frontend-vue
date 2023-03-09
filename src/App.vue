@@ -2,8 +2,11 @@
 <div id="app">
   <Header />
   <Sidebar />
-  <div id="views" class="pt-4 px-4" :class="{'views-margin': username}">
+  <div id="audio-player-and-views" class="pt-4 px-4" :class="{'views-margin': username}">
+    <AudioPlayer />
+    <div>
     <router-view />
+  </div>
   </div>
 </div>
 </template>
@@ -11,6 +14,7 @@
 <script lang="ts">
 import Header from './components/Header.vue'
 import Sidebar from './components/Sidebar.vue'
+import AudioPlayer from './components/AudioPlayer.vue'
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -18,6 +22,7 @@ export default defineComponent({
   components: {
     Header, 
     Sidebar,
+    AudioPlayer,
   },
   computed: {
     username() {

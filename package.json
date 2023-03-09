@@ -7,14 +7,19 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.3.0",
+    "aws-sdk": "^2.1321.0",
     "axios": "^0.27.2",
     "bulma": "^0.9.4",
     "core-js": "^3.8.3",
     "vue": "^3.2.47",
     "vue-router": "^4.0.3",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "wavesurfer.js": "^6.4.0"
   },
   "devDependencies": {
+    "@types/node": "^18.14.0",
+    "@types/wavesurfer.js": "^6.0.3",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-typescript": "~5.0.0",

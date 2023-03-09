@@ -1,21 +1,38 @@
 import { createStore } from 'vuex'
 import Artist from '@/types/Artist'
 import SongWithArtist from '@/types/SongWithArtist'
+import axios from 'axios';
 
-const axios = require('axios').default;
+// const axios = require('axios').default;
 
 const store = createStore({
   state: {
     username: '',
     artists: [] as Artist[],
     newArtistId: '',
+    // *** audio info + controls ***
+    titleAndVersion: '',
+    playAudio: false as boolean,
+    audioPlaying: false as boolean,
+    audioInfo: {
+      artistName: '' as string,
+      songTitle: '' as string,
+      audioFileName: '' as string
+    },
   },
   mutations: {
     initialiseStore(state) {
-      if (localStorage.getItem('store')) {
-        this.replaceState(
-					Object.assign(state, JSON.parse(localStorage.getItem('store') || ''))
-				);
+      if (localStorage.getItem('username')) { 
+        state.username = JSON.parse(localStorage.username);
+        if (localStorage.getItem('artists')) { 
+          state.artists = JSON.parse(localStorage.artists);
+          if (localStorage.getItem('titleAndVersion')) { 
+            state.titleAndVersion = JSON.parse(localStorage.titleAndVersion);
+            if (localStorage.getItem('audioInfo')) { 
+              state.audioInfo = JSON.parse(localStorage.audioInfo);
+            }
+          }
+        }
       }
     },
     setUsername(state, payload: string) {
@@ -25,6 +42,14 @@ const store = createStore({
       state.username = '';
       state.artists = [];
       state.newArtistId = '';
+      state.titleAndVersion = '';
+      state.playAudio = false;
+      state.audioPlaying = false;
+      state.audioInfo = {
+        artistName: '',
+        songTitle: '',
+        audioFileName: ''
+      }
     },
     setArtists(state, payload: Artist[]) {
       state.artists = payload;
@@ -32,10 +57,23 @@ const store = createStore({
     setNewArtistId(state, payload: string) {
       state.newArtistId = payload;
     },
+    setPlayAudio(state, payload) {
+        state.playAudio = payload;
+        state.audioPlaying = payload;
+    },
   },
   actions: {
+    playFromSongCard({ commit, state }, payload) {
+      if (state.titleAndVersion !== payload.titleAndVersion) {
+        state.playAudio && commit('setPlayAudio', false);
+        state.titleAndVersion = payload.titleAndVersion;
+        state.audioInfo = payload.audioInfo;
+      } else {
+        // play or pause audio
+        state.playAudio ? commit('setPlayAudio', false) : commit('setPlayAudio', true);
+      }
+    },
     async requestArtistsWithOpenSongs(context) {
-      console.log('Store - fetching artists')
       const token = localStorage.getItem('token')
       const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/artists?hasOpenSongs=true`, {
           headers: {
@@ -44,7 +82,6 @@ const store = createStore({
         }
       )
       const artists: Artist[] = response.data
-      console.log('Fetched Data:', artists)
       context.commit('setArtists', artists)
     },
     async logoutUser(context) {
@@ -96,7 +133,10 @@ const store = createStore({
 })
 
 const unsubscribe = store.subscribe((mutation, state) => {
-  localStorage.setItem('store', JSON.stringify(state))
+  localStorage.setItem('username', JSON.stringify(state.username));
+  localStorage.setItem('artists', JSON.stringify(state.artists));
+  localStorage.setItem('titleAndVersion', JSON.stringify(state.titleAndVersion));
+  localStorage.setItem('audioInfo', JSON.stringify(state.audioInfo));
 })
 
 export default store;
