@@ -25,13 +25,16 @@
         @change="onFileSelected" 
         ref="fileInput"
       />
-      <div>
-        <span class="is-clickable" @click="$refs.fileInput.click()">Upload An Mp3 : </span>
-        <span v-if="this.selectedFile">{{selectedFile.name}}</span>
+      <div class="mt-3">
+        <label class="is-clickable" @click="$refs.fileInput.click()">
+          <i class="fa-solid fa-upload"></i>
+          <span class="ml-2">Upload An Mp3:</span>
+        </label>
+        <span v-if="this.selectedFile" class="ml-2">{{selectedFile.name}}</span>
       </div>
 
       <div class="submit">
-        <button class="button is-success is-light is-rounded">Create Version</button>
+        <button class="button is-rounded">Create Version</button>
       </div>
 
       <div>
@@ -132,7 +135,6 @@ export default defineComponent({
     if (Object.keys(this.song).length !== 0 && this.song.constructor === Object) {
       this.newVersionNumber = this.song.versions.length + 1;
     }
-    // getAudioFile('user2', 'The Uh Ohs', 'Try Again', 'Intro Music.mp3')
   },
   watch: {
     song() {
