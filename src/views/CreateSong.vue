@@ -23,8 +23,11 @@
       ref="fileInput"
     />
     <div>
-      <span class="is-clickable" @click="$refs.fileInput.click()">Upload An Mp3 : </span>
-      <span v-if="this.selectedFile">{{selectedFile.name}}</span>
+      <label class="is-clickable" @click="$refs.fileInput.click()">
+        <i class="fa-solid fa-upload"></i>
+        <span class="ml-2">Upload An Mp3:</span>
+      </label>
+      <span v-if="this.selectedFile" class="ml-2">{{selectedFile.name}}</span>
     </div>
 
     <div class="submit">
