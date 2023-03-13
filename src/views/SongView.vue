@@ -48,6 +48,7 @@
     <SongCard 
       v-for="version in song.versions"
       :key="version.id"
+      :songId="song.id"
       :songTitle="song.title"
       :artistName="song.artistName"
       :artistImage="song.artistImage"
@@ -127,7 +128,6 @@ export default defineComponent({
       if (target.files) {
         this.selectedFile = target.files[0];
       }
-      console.log(this.selectedFile)
     }
   },
   mounted() {

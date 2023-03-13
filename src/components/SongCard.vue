@@ -6,7 +6,10 @@
         <img @click="handlePlayPause" src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
       </figure>   
       <div class="mx-1 my-1">
-        <p class="top-line is-size-6">{{songTitle}} MIX V{{versionNumber}}</p>
+        <p class="top-line is-size-6">
+          <span class="is-clickable" @click="handleSongTitleClick">{{songTitle}}</span>
+          <span> MIX V{{versionNumber}}</span>
+        </p>
         <p class="content is-size-7">{{artistName}}</p>
       </div>
     </div>
@@ -31,6 +34,10 @@ export default defineComponent({
     },
     artistImage: {
       required: false,
+      type: String
+    },
+    songId: {
+      required: true,
       type: String
     },
     songTitle: {
@@ -59,6 +66,9 @@ export default defineComponent({
     }
   },
   methods: {
+    handleSongTitleClick() {
+      this.$router.push(`/song/${this.songId}/details`)
+    },
     handleNotesClick() {
       this.$router.push(`/version/${this.versionId}/notes`);
     },
