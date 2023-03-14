@@ -91,6 +91,13 @@ const store = createStore({
     }
   },
   getters: {
+    getArtistById: (state) => (artistId: string) => {
+      if (!state.artists.length) return;
+      let foundArtist = state.artists.find(artist => artist.id === artistId);
+      if (foundArtist) {
+        return foundArtist;
+      }
+    },
     getSongWithArtistBySongId: (state) => (songId: string) => {
       let foundSong = {} as SongWithArtist;
       state.artists.forEach(artist => {
@@ -108,7 +115,7 @@ const store = createStore({
       return foundSong;
     },
     getSongWithArtistByVersionId: (state) => (versionId: string) => {
-      if (state.artists) {
+      if (state.artists.length) {
         let foundSong = {} as SongWithArtist;
         state.artists.forEach(artist => {
         artist.songs.forEach(song => {

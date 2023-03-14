@@ -50,6 +50,7 @@
       :key="version.id"
       :songId="song.id"
       :songTitle="song.title"
+      :artistId="song.artistId"
       :artistName="song.artistName"
       :artistImage="song.artistImage"
       :versionNumber="version.number"

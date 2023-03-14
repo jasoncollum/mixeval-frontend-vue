@@ -2,6 +2,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import UserProfile from '../views/UserProfile.vue'
 import CreateArtist from '../views/CreateArtist.vue'
+import ArtistDetails from '../views/ArtistDetails.vue'
+import ArtistEdit from '../views/ArtistEdit.vue'
 import CreateSong from '../views/CreateSong.vue'
 import SongDetails from '../views/SongDetails.vue'
 import SongEdit from '../views/SongEdit.vue'
@@ -48,6 +50,22 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/artist/:id/details',
+    name: 'artistDetails',
+    component: ArtistDetails,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/artist/:id/edit',
+    name: 'artistEdit',
+    component: ArtistEdit,
+    meta: {
+      requiresAuth: true
+    },
   },
   {
     // *** rename this path '/song/create' and refactor where needed ***

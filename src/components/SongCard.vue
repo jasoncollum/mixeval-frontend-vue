@@ -10,7 +10,7 @@
           <span class="is-clickable" @click="handleSongTitleClick">{{songTitle}}</span>
           <span> MIX V{{versionNumber}}</span>
         </p>
-        <p class="content is-size-7">{{artistName}}</p>
+        <p class="content is-size-7 is-clickable" @click="handleArtistNameClick">{{artistName}}</p>
       </div>
     </div>
 
@@ -28,6 +28,10 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'SongCard',
   props: {
+    artistId: {
+      required: true,
+      type: String
+    },
     artistName: {
       required: true,
       type: String
@@ -60,14 +64,12 @@ export default defineComponent({
   data() {
     return {}
   },
-  computed: {
-    isPlaying() {
-      console.log('SongCard AudioPlaying::', this.$store.state.audioPlaying);
-    }
-  },
   methods: {
     handleSongTitleClick() {
-      this.$router.push(`/song/${this.songId}/details`)
+      this.$router.push(`/song/${this.songId}/details`);
+    },
+    handleArtistNameClick() {
+      this.$router.push(`/artist/${this.artistId}/details`);
     },
     handleNotesClick() {
       this.$router.push(`/version/${this.versionId}/notes`);
