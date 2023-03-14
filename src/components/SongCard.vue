@@ -8,7 +8,7 @@
       <div class="mx-1 my-1">
         <p class="top-line is-size-6">
           <span class="is-clickable" @click="handleSongTitleClick">{{songTitle}}</span>
-          <span> MIX V{{versionNumber}}</span>
+          <span class="is-clickable" @click="handleVersionNumberClick"> MIX V{{versionNumber}}</span>
         </p>
         <p class="content is-size-7 is-clickable" @click="handleArtistNameClick">{{artistName}}</p>
       </div>
@@ -70,6 +70,9 @@ export default defineComponent({
     },
     handleArtistNameClick() {
       this.$router.push(`/artist/${this.artistId}/details`);
+    },
+    handleVersionNumberClick() {
+      this.$router.push(`/version/${this.versionId}/edit`);
     },
     handleNotesClick() {
       this.$router.push(`/version/${this.versionId}/notes`);
