@@ -6,8 +6,11 @@
         <img @click="handlePlayPause" src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
       </figure>   
       <div class="mx-1 my-1">
-        <p class="top-line is-size-6">{{songTitle}} MIX V{{versionNumber}}</p>
-        <p class="content is-size-7">{{artistName}}</p>
+        <p class="top-line is-size-6">
+          <span class="is-clickable" @click="handleSongTitleClick">{{songTitle}}</span>
+          <span class="is-clickable" @click="handleVersionNumberClick"> MIX V{{versionNumber}}</span>
+        </p>
+        <p class="content is-size-7 is-clickable" @click="handleArtistNameClick">{{artistName}}</p>
       </div>
     </div>
 
@@ -25,12 +28,20 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'SongCard',
   props: {
+    artistId: {
+      required: true,
+      type: String
+    },
     artistName: {
       required: true,
       type: String
     },
     artistImage: {
       required: false,
+      type: String
+    },
+    songId: {
+      required: true,
       type: String
     },
     songTitle: {
@@ -53,12 +64,16 @@ export default defineComponent({
   data() {
     return {}
   },
-  computed: {
-    isPlaying() {
-      console.log('SongCard AudioPlaying::', this.$store.state.audioPlaying);
-    }
-  },
   methods: {
+    handleSongTitleClick() {
+      this.$router.push(`/song/${this.songId}/details`);
+    },
+    handleArtistNameClick() {
+      this.$router.push(`/artist/${this.artistId}/details`);
+    },
+    handleVersionNumberClick() {
+      this.$router.push(`/version/${this.versionId}/edit`);
+    },
     handleNotesClick() {
       this.$router.push(`/version/${this.versionId}/notes`);
     },

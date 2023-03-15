@@ -2,7 +2,11 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import UserProfile from '../views/UserProfile.vue'
 import CreateArtist from '../views/CreateArtist.vue'
+import ArtistDetails from '../views/ArtistDetails.vue'
+import ArtistEdit from '../views/ArtistEdit.vue'
 import CreateSong from '../views/CreateSong.vue'
+import SongDetails from '../views/SongDetails.vue'
+import SongEdit from '../views/SongEdit.vue'
 import VersionEdit from '../views/VersionEdit.vue'
 import SignupForm from '../views/SignupForm.vue'
 import SigninForm from '../views/SigninForm.vue'
@@ -48,6 +52,22 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/artist/:id/details',
+    name: 'artistDetails',
+    component: ArtistDetails,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/artist/:id/edit',
+    name: 'artistEdit',
+    component: ArtistEdit,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
     // *** rename this path '/song/create' and refactor where needed ***
     // *** rename name 'songCreate' and component 'SongCreate' and refactor ***
     path: '/create-song',
@@ -61,6 +81,22 @@ const routes: Array<RouteRecordRaw> = [
     path: '/song/:id',
     name: 'songView',
     component: SongView,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/song/:id/details',
+    name: 'songDetails',
+    component: SongDetails,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/song/:id/edit',
+    name: 'songEdit',
+    component: SongEdit,
     meta: {
       requiresAuth: true
     },

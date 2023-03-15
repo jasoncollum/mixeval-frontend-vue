@@ -74,7 +74,6 @@ export default defineComponent({
           }
         )
         this.artistList = response.data;
-        console.log(this.previousPath)
       } catch (error: any) {
         // IMPROVE ERROR HANDLING
         console.log(error.response.data.message)
