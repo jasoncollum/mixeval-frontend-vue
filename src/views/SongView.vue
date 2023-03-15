@@ -18,7 +18,7 @@
       <label>New Version Number:</label>
       <input type="number" v-model="newVersionNumber" required />
 
-      <!-- <label>Upload MP3 Audio</label> -->
+      <!-- Upload MP3 Audio -->
       <input 
         style="display: none" 
         type="file" accept=".mp3" 
@@ -34,11 +34,13 @@
       </div>
 
       <div class="submit">
-        <button class="button is-rounded">Create Version</button>
+        <button v-if="!isUploading" class="button is-rounded">Create Version</button>
+        <button v-if="isUploading" class="button is-rounded is-loading">Create Song</button>
+        <p v-if="isUploading" class="has-text-grey-light mt-2 is-italic">Uploading Audio...</p>
       </div>
 
       <div>
-        <p class="is-size-7 has-text-centered cancel" @click="handleHideForm">Cancel</p>
+        <p v-if="!isUploading" class="is-size-7 has-text-centered cancel" @click="handleHideForm">Cancel</p>
       </div>
     </form>
   </div>
@@ -79,6 +81,7 @@ export default defineComponent({
       showForm: false,
       newVersionNumber: null as number | null,
       selectedFile: null as any,    // TYPESCRIPT selectedFile
+      isUploading: false
     }
   },
   computed: {
@@ -97,6 +100,7 @@ export default defineComponent({
       try {
         // Upload audio file to aws s3 bucket
         if (this.selectedFile && this.selectedFile.type === 'audio/mpeg') {
+          this.isUploading = true;
           const username = this.$store.state.username;
           const artistName = this.song.artistName;
           const songTitle = this.song.title;
@@ -117,9 +121,12 @@ export default defineComponent({
               }
             )
             this.$store.dispatch('requestArtistsWithOpenSongs');
+            this.isUploading = false;
           }
         }
       } catch (error) {
+        // IMPROVE ERROR HANDLING
+        this.isUploading = false;
         console.log(error)
       }
       this.showForm = false;

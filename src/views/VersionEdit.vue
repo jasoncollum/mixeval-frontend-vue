@@ -18,9 +18,11 @@
     </div>
 
     <div class="submit">
-      <button class="button is-rounded">Update Audio</button>
+      <button v-if="!isUploading" class="button is-rounded">Update Audio</button>
+      <button v-if="isUploading" class="button is-rounded is-loading">Create Song</button>
+      <p v-if="isUploading" class="has-text-grey-light mt-2 is-italic">Uploading Audio...</p>
     </div>
-    <div class="is-size-7 has-text-centered is-clickable" @click="$router.go(-1)">Cancel</div>
+    <div v-if="!isUploading" class="is-size-7 has-text-centered is-clickable" @click="$router.go(-1)">Cancel</div>
   </form>
 </template>
 
@@ -38,6 +40,7 @@ export default defineComponent({
     return {
       versionNumber: null as Number | null,
       selectedFile: null as any,        // <= TYPESCRIPT selectedFile
+      isUploading: false
     }
   },
   computed: {
@@ -56,10 +59,12 @@ export default defineComponent({
       try {
         // Upload audio file to aws s3 bucket
         if (this.selectedFile && this.selectedFile.type === 'audio/mpeg') {
+          this.isUploading = true;
           const username = this.$store.state.username;
           const artistName = this.song.artistName;
           const songTitle = this.song.title;
           const result = await audioFileUpload(this.selectedFile, username, artistName, songTitle);
+
           if (result && result.statusText === 'OK') {
             // Patch request to Update Version audioFileName
             const token = localStorage.getItem('token');
@@ -74,6 +79,7 @@ export default defineComponent({
               }
             )
             this.$store.dispatch('requestArtistsWithOpenSongs');
+            this.isUploading = false;
             this.versionNumber = null;
             this.selectedFile = null;
             this.$router.push(`/song/${this.song.id}`);
@@ -81,6 +87,7 @@ export default defineComponent({
         }
       } catch (error) {
         // IMPROVE ERROR HANDLING
+        this.isUploading = false;
         console.log(error)
       }
     }

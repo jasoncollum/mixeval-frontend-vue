@@ -31,7 +31,9 @@
     </div>
 
     <div class="submit">
-      <button class="button is-rounded">Create Song</button>
+      <button v-if="!isUploading" class="button is-rounded">Create Song</button>
+      <button v-if="isUploading" class="button is-rounded is-loading">Create Song</button>
+      <p v-if="isUploading" class="has-text-grey-light mt-2 is-italic">Uploading Audio...</p>
     </div>
 
     <div class="is-size-7 has-text-centered">
@@ -59,7 +61,8 @@ export default defineComponent({
       selected: {id: '', name: ''},
       artistList: [] as ArtistDetail[],
       selectedFile: null as any,        // <= TYPESCRIPT selectedFile
-      previousPath: ''
+      previousPath: '',
+      isUploading: false
     }
   },
   methods: {
@@ -89,36 +92,41 @@ export default defineComponent({
       try {
         // Upload audio file to aws s3 bucket
         if (this.selectedFile && this.selectedFile.type === 'audio/mpeg') {
+          this.isUploading = true;
           const username = this.$store.state.username;
           const artistName = this.selected.name;
           const songTitle = this.title;
           const result = await audioFileUpload(this.selectedFile, username, artistName, songTitle);
-
-          // Post request to create new song in db (as well as create version 1)
-          const token = localStorage.getItem('token');
-          const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/songs`, {
-            title: this.title,
-            artistId: this.selected.id,
-            isOpen: true,
-            audioFileNameForVersion: this.selectedFile.name
-            },
-            {
-              headers: {
-                'Authorization': `Bearer ${token}`
+          
+          if (result && result.statusText === 'OK') {
+            // Post request to create new song in db (as well as create version 1)
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/songs`, {
+              title: this.title,
+              artistId: this.selected.id,
+              isOpen: true,
+              audioFileNameForVersion: this.selectedFile.name
+              },
+              {
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
               }
-            }
-          )
-          const createdSong: Song = response.data;
-          this.$store.dispatch('requestArtistsWithOpenSongs');
-          this.$store.commit('setNewArtistId', '');
-          this.title = '';
-          this.selected.id = '';
-          this.selected.name = '';
-          this.artistList = [];
-          this.$router.push(`/song/${createdSong.id}`);
+            )
+            const createdSong: Song = response.data;
+            this.$store.dispatch('requestArtistsWithOpenSongs');
+            this.$store.commit('setNewArtistId', '');
+            this.isUploading = false;
+            this.title = '';
+            this.selected.id = '';
+            this.selected.name = '';
+            this.artistList = [];
+            this.$router.push(`/song/${createdSong.id}`);
+          }
         }
       } catch (error: any) {
         // IMPROVE ERROR HANDLING
+        this.isUploading = false;
         console.log(error.response.data.message)
       }
     },
