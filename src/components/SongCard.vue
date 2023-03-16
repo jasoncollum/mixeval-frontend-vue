@@ -1,9 +1,27 @@
 <template>
-  <div class="song-card-row-container is-clickable is-flex is-justify-content-space-between">
+  <div 
+    class="song-card-row-container is-clickable is-flex is-justify-content-space-between"
+    @mouseover="hover = true" 
+    @mouseleave="hover = false"
+  >
     <div class="card-container is-flex">
       <figure class="image is-48x48 is-clipped mx-1 my-1">
         <!-- <img v-if="artistImage" :src="artistImage"/> -->
-        <img @click="handlePlayPause" src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
+        <img v-show="!hover"
+          src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" 
+        />
+        <span v-show="(!audioPlaying && hover) || (audioInfo.versionId !== versionId && hover)"
+          class="icon is-large" 
+          @click="handlePlayPause"
+        >
+          <i class="fa-solid fa-play"></i>
+        </span>
+        <span v-show="audioInfo.versionId === versionId && audioPlaying && hover"
+          class="icon is-large" 
+          @click="handlePlayPause"
+        >
+          <i class="fa-solid fa-pause"></i>
+        </span>
       </figure>   
       <div class="mx-1 my-1">
         <p class="top-line is-size-6">
@@ -62,7 +80,17 @@ export default defineComponent({
     }
   },
   data() {
-    return {}
+    return {
+      hover: false,
+    }
+  },
+  computed: {
+    audioPlaying() {
+      return this.$store.state.audioPlaying;
+    },
+    audioInfo() {
+      return this.$store.state.audioInfo;
+    }
   },
   methods: {
     handleSongTitleClick() {
@@ -83,11 +111,12 @@ export default defineComponent({
         audioInfo: {
           artistName: this.artistName,
           songTitle: this.songTitle,
+          versionId: this.versionId,
           audioFileName: this.audioFileName
         }
       })
     }
-  }
+  },
 })
 </script>
 

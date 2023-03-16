@@ -53,9 +53,6 @@ export default defineComponent({
     }
   },
   methods: {
-    setPercent(percentage) {
-      console.log(percentage)
-    },
     playPause() {
       if (!this.audioPlaying) {
         this.wavesurfer.play();
@@ -98,7 +95,7 @@ export default defineComponent({
         );
         this.wavesurfer.load(url);
 
-        this.showPlayPause = true
+        this.showPlayPause = true;
       } catch (error) {
         // IMPROVE ERROR HANDLING
         console.log(error);
@@ -118,19 +115,41 @@ export default defineComponent({
       if (!this.playAudio) {
         this.wavesurfer.pause();
       }
+    },
+    username() {
+      if (this.username) {
+        this.wavesurfer = WaveSurfer.create({
+          container: '#waveform',
+          responsive: true,
+          waveColor: 'gray',
+          progressColor: 'lightgray',
+          pixelRatio: 1,
+        });
+        if (this.titleAndVersion) {
+          this.loadWavesurfer();
+        }
+      }
+      if (!this.username) {
+        this.percent = 0;
+        this.isLoading = false,
+        this.showPlayPause = false;
+        this.wavesurfer.destroy();
+      }
     }
   },
   async mounted() {
     this.$nextTick(() => {
-      this.wavesurfer = WaveSurfer.create({
-      container: '#waveform',
-      responsive: true,
-      waveColor: 'gray',
-      progressColor: 'lightgray',
-      pixelRatio: 1,
-      });
-      if (this.titleAndVersion) {
-        this.loadWavesurfer();
+      if (this.username) {
+        this.wavesurfer = WaveSurfer.create({
+        container: '#waveform',
+        responsive: true,
+        waveColor: 'gray',
+        progressColor: 'lightgray',
+        pixelRatio: 1,
+        });
+        if (this.titleAndVersion) {
+          this.loadWavesurfer();
+        }
       }
     })
   }
