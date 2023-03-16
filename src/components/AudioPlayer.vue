@@ -1,6 +1,9 @@
 <template>
   <div v-show="username" id="audio-player">
-    <progress v-if="isLoading" id="progress-bar" class="progress is-small" max="90">15%</progress>
+    <div v-if="isLoading">
+      <div id="loading-audio-message" class="has-text-centered">Loading Audio {{percent}}%</div>
+      <!-- <progress id="progress-bar" class="progress is-small">10%</progress> -->
+    </div>
     <div id="waveform"></div>
       <div class="is-flex is-flex-direction-row mx-1 mt-5">
         <div v-if="showPlayPause" class="is-clickable" @click="playPause">
@@ -27,6 +30,7 @@ export default defineComponent({
   name: 'AudioPlayer',
   data() {
     return {
+      percent: 0,
       isLoading: false,
       showPlayPause: false,
     }
@@ -49,6 +53,9 @@ export default defineComponent({
     }
   },
   methods: {
+    setPercent(percentage) {
+      console.log(percentage)
+    },
     playPause() {
       if (!this.audioPlaying) {
         this.wavesurfer.play();
@@ -63,17 +70,32 @@ export default defineComponent({
     },
     async loadWavesurfer() {
       try {
+        // wavesurfer event listeners
+        this.wavesurfer.on('error', (error) => {
+          console.log(error)
+        })
+
+        this.wavesurfer.on('finish', () => {
+          this.wavesurfer.pause();
+          this.$store.commit('setPlayAudio', false)
+        })
+
+        this.wavesurfer.on('loading', (percentage) => {
+         this.percent = percentage;
+        })
+
+        this.wavesurfer.on('ready', () => {
+          this.stopLoader();
+        })
+
+        // load wavesurfer audio
+        this.isLoading = true;
         const url = await getAudioFile(
           this.username, 
           this.audioInfo.artistName, 
           this.audioInfo.songTitle, 
           this.audioInfo.audioFileName
         );
-
-        this.isLoading = true;
-        this.wavesurfer.on('ready', () => {
-          this.stopLoader();
-        })
         this.wavesurfer.load(url);
 
         this.showPlayPause = true
@@ -102,9 +124,10 @@ export default defineComponent({
     this.$nextTick(() => {
       this.wavesurfer = WaveSurfer.create({
       container: '#waveform',
+      responsive: true,
       waveColor: 'gray',
-      progressColor: 'lightblue',
-      pixelRatio: 1
+      progressColor: 'lightgray',
+      pixelRatio: 1,
       });
       if (this.titleAndVersion) {
         this.loadWavesurfer();
@@ -120,10 +143,11 @@ export default defineComponent({
     position: relative;
   }
 
-  #progress-bar {
+  #loading-audio-message {
     position: absolute;
     top: 60px;
-    right: 0;
+    left: 40%;
+    right: 40%;
     z-index: 2;
   }
 
@@ -143,6 +167,12 @@ export default defineComponent({
   }
 
   i.fa-play {
-    margin-left: 3px;
+    margin-left: 5px;
+    margin-top: 1px;
+  }
+
+  i.fa-pause {
+    margin-top: 1px;
+    margin-left: 1px;
   }
 </style>
