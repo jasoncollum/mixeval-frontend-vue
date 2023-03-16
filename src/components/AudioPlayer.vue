@@ -1,6 +1,8 @@
 <template>
   <div v-show="username" id="audio-player">
-    <progress v-if="isLoading" id="progress-bar" class="progress is-small" max="90">15%</progress>
+    <div v-if="isLoading">
+      <progress id="progress-bar" class="progress is-small">10%</progress>
+    </div>
     <div id="waveform"></div>
       <div class="is-flex is-flex-direction-row mx-1 mt-5">
         <div v-if="showPlayPause" class="is-clickable" @click="playPause">
@@ -27,6 +29,7 @@ export default defineComponent({
   name: 'AudioPlayer',
   data() {
     return {
+      percent: 0,
       isLoading: false,
       showPlayPause: false,
     }
@@ -49,6 +52,9 @@ export default defineComponent({
     }
   },
   methods: {
+    setPercent(percentage) {
+      console.log(percentage)
+    },
     playPause() {
       if (!this.audioPlaying) {
         this.wavesurfer.play();
@@ -70,11 +76,24 @@ export default defineComponent({
           this.audioInfo.audioFileName
         );
 
+        this.wavesurfer.on('error', function(error) {
+          console.log(error)
+        })
+
+        this.wavesurfer.on('finish', function() {
+          console.log('Finished')
+        })
+
         this.isLoading = true;
+
         this.wavesurfer.on('ready', () => {
           this.stopLoader();
         })
         this.wavesurfer.load(url);
+
+        // this.wavesurfer.on('loading', function(percentage) {
+        //  this.percent = percentage;
+        // })
 
         this.showPlayPause = true
       } catch (error) {
@@ -102,9 +121,10 @@ export default defineComponent({
     this.$nextTick(() => {
       this.wavesurfer = WaveSurfer.create({
       container: '#waveform',
+      responsive: true,
       waveColor: 'gray',
       progressColor: 'lightblue',
-      pixelRatio: 1
+      pixelRatio: 1,
       });
       if (this.titleAndVersion) {
         this.loadWavesurfer();
@@ -143,6 +163,12 @@ export default defineComponent({
   }
 
   i.fa-play {
-    margin-left: 3px;
+    margin-left: 5px;
+    margin-top: 1px;
+  }
+
+  i.fa-pause {
+    margin-top: 1px;
+    margin-left: 1px;
   }
 </style>
