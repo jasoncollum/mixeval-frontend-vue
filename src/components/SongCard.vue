@@ -7,7 +7,13 @@
     <div class="card-container is-flex">
       <figure class="image is-48x48 is-clipped mx-1 my-1">
         <!-- <img v-if="artistImage" :src="artistImage"/> -->
-        <img v-show="!hover"
+        <span v-if="audioInfo.versionId === versionId && audioPlaying && !hover" class="eq">
+          <span class="bar bar-1"></span>
+          <span class="bar bar-2"></span>
+          <span class="bar bar-3"></span>
+          <span class="bar bar-4"></span>
+        </span>
+        <img v-else-if="!hover"
           src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" 
         />
         <span v-show="(!audioPlaying && hover) || (audioInfo.versionId !== versionId && hover)"
@@ -120,8 +126,63 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .song-card-row-container:hover {
   background-color: rgb(248, 247, 247);
+}
+
+/* Audio Playing Bars */
+.eq {
+  width: 48px;
+  height: 48px;
+  /* position: fixed; */
+  /* height: 100px;
+  width: 100px;   */
+  /* top: 50%;
+  left: 50%; */
+  /* margin: 0; */
+  /* float: none; */
+  /* transform: translate(-50%, -50%) scale(0.25);  */
+}
+
+.bar {
+  width: 15%;
+  /* height: 0; */
+  max-height: 60%;
+  position: absolute;
+  bottom: 25%;
+  left: 8%;
+  background: rgb(214, 214, 214);
+  transition: height 0.4s ease;
+  animation: bar 0.4s 0s both alternate ease infinite;
+}
+
+.bar-1 {
+  animation-delay: 0.2s;
+}
+
+.bar-2 {
+  left: 31%;
+    animation-delay: 0.4s;
+}
+
+.bar-3 {
+  left: 54%;
+    animation-delay: 0.6s;
+}
+
+.bar-4 {
+  left: 77%;
+    animation-delay: 0.8s;
+}
+
+@keyframes bar {
+  0% {
+    height: 0;
+  }
+  
+  100% {
+    height: 60%;
+  }
 }
 </style>

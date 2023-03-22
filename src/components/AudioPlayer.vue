@@ -2,7 +2,6 @@
   <div v-show="username" id="audio-player">
     <div v-if="isLoading">
       <div id="loading-audio-message" class="has-text-centered">Loading Audio {{percent}}%</div>
-      <!-- <progress id="progress-bar" class="progress is-small">10%</progress> -->
     </div>
     <div id="waveform"></div>
       <div class="is-flex is-flex-direction-row mx-1 mt-5">
