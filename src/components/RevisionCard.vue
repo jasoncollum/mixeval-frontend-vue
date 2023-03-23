@@ -7,7 +7,9 @@
           class="delete-revision-btn has-text-grey is-pulled-right is-clickable"
           @click="$emit('deletedRevision', { revisionId: revision.id, noteId: revision.noteId })"
         >
-          delete
+          <span class="icon">
+            <i class="fa-regular fa-trash-can"></i>
+          </span>
         </span>
       </div>
       <br>
@@ -23,13 +25,17 @@
             {
               revisionId: revision.id, revisionText: revision.text, noteId: revision.noteId
             }); revision.edit = false; "
-          >Done</div>
+          >
+            <span class="icon mt-3">
+              <i class="fa-solid fa-plus"></i>
+            </span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-// class="delete-revision-btn is-pulled-right is-clickable"
+
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import Revision from '@/types/Revision';

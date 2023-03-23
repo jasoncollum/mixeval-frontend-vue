@@ -15,7 +15,12 @@
         </span>
       </div>
     </div>
-    <div class="has-text-centered mt-6 is-clickable" @click="this.$router.go(-1);">Back</div>
+    <div class="has-text-centered mt-6 is-clickable" @click="this.$router.go(-1);">
+      <span class="icon mt-3 is-clickable">
+        <i class="fa-solid fa-caret-left"></i>
+      </span>
+      <span class="is-clickable">Back</span>
+    </div>
   </div>
 </template>
 

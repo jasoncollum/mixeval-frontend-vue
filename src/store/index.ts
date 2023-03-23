@@ -15,9 +15,10 @@ const store = createStore({
     playAudio: false as boolean,
     audioPlaying: false as boolean,
     audioInfo: {
-      artistName: '' as string,
-      songTitle: '' as string,
-      audioFileName: '' as string
+      artistName: '',
+      songTitle: '',
+      versionId: '',
+      audioFileName: ''
     },
   },
   mutations: {
@@ -48,6 +49,7 @@ const store = createStore({
       state.audioInfo = {
         artistName: '',
         songTitle: '',
+        versionId: '',
         audioFileName: ''
       }
     },

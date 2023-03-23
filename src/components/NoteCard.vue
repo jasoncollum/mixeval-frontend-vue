@@ -7,7 +7,9 @@
           class="delete-note-btn has-text-grey is-pulled-right is-clickable" 
           @click="$emit('deletedNote', note.id)"
         >
-          delete
+          <span class="icon">
+            <i class="fa-regular fa-trash-can"></i>
+          </span>
         </span>
       </div>
       <br>
@@ -20,7 +22,10 @@
           <div 
             class="is-clickable" 
             @click="$emit('editedNote', note.id, note.text); note.edit = false;"
-          >Done</div>
+          >
+          <span class="icon mt-3">
+            <i class="fa-solid fa-plus"></i>
+          </span></div>
         </div>
       </div>
     </div>
@@ -59,11 +64,14 @@
           <div 
             class="is-clickable" 
             @click="$emit('addNewRevision', newRevisionText, note.id); closeAndClearInput()"
-          >Done</div>
+          >
+            <span class="icon mt-3">
+              <i class="fa-solid fa-plus"></i>
+            </span>
+          </div>
         </div>
       </div>
     </div>
-    <!-- <hr class="note-card-hr"/> -->
   </div>
 </template>
 

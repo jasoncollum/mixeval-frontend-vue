@@ -3,14 +3,34 @@
     <!-- top panel container -->
     <div>
       <div class="mb-2">
-        <router-link to="/profile">> {{username}}</router-link>
+        <router-link to="/profile">
+          <span class="icon">
+            <i class="fa-regular fa-user"></i>
+          </span>
+          <span class="ml-1">{{username}}</span>
+        </router-link>
       </div>
-      <div class="mb-2">O Search</div>
       <div class="mb-2">
-        <router-link to="/create-artist">+ Create Artist</router-link>
+        <span class="icon">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </span>
+          <span class="ml-1">Search</span>
       </div>
       <div class="mb-2">
-        <router-link to="/create-song">+ Create Song</router-link>
+        <router-link to="/create-artist">
+          <span class="icon">
+            <i class="fa-solid fa-plus"></i>
+          </span>
+          <span class="ml-1">Create Artist</span>
+        </router-link>
+      </div>
+      <div class="mb-2">
+        <router-link to="/create-song">
+          <span class="icon">
+            <i class="fa-solid fa-plus"></i>
+          </span>
+          <span class="ml-1">Create Song</span>
+        </router-link>
       </div>
       <hr>
       <!-- <div class="top-panel-item">Open Songs</div> -->
