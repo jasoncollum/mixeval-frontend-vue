@@ -37,11 +37,11 @@
       <div class="has-text-centered my-2">
         <span @click="listArtists" 
               class="artists-songs-spans mr-1" 
-              :class="{'selected': selectArtists}">Artists
+              :class="{'faded': !selectArtists}">Artists
         </span> | <span 
               @click="listSongs" 
               class="artists-songs-spans ml-1"
-              :class="{'selected': selectSongs}">Songs
+              :class="{'faded': !selectSongs}">Songs
         </span>
       </div>
     </div>
@@ -119,7 +119,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .sidebar {
   position: fixed;    
   height: 100vh;
@@ -129,7 +129,7 @@ export default defineComponent({
 .artists-songs-spans:hover {
   cursor: pointer;
 }
-.selected {
-  color: #42b983;
+.faded {
+  color: rgb(184, 182, 182);
 }
 </style>
