@@ -135,34 +135,27 @@ export default defineComponent({
 .eq {
   width: 48px;
   height: 48px;
-  /* position: fixed; */
-  /* height: 100px;
-  width: 100px;   */
-  /* top: 50%;
-  left: 50%; */
-  /* margin: 0; */
-  /* float: none; */
-  /* transform: translate(-50%, -50%) scale(0.25);  */
+  transform: translate(-50%, -50%) scale(0.25); 
 }
 
 .bar {
-  width: 15%;
-  /* height: 0; */
-  max-height: 60%;
+  width: 18%;
+  max-height: 65%;
   position: absolute;
-  bottom: 25%;
-  left: 8%;
+  bottom: 20%;
+  left: 12%;
   background: rgb(214, 214, 214);
   transition: height 0.4s ease;
   animation: bar 0.4s 0s both alternate ease infinite;
 }
 
 .bar-1 {
+  /* left: 2%; */
   animation-delay: 0.2s;
 }
 
 .bar-2 {
-  left: 31%;
+  left: 32%;
     animation-delay: 0.4s;
 }
 
@@ -172,7 +165,7 @@ export default defineComponent({
 }
 
 .bar-4 {
-  left: 77%;
+  left: 75%;
     animation-delay: 0.8s;
 }
 
@@ -182,7 +175,7 @@ export default defineComponent({
   }
   
   100% {
-    height: 60%;
+    height: 65%;
   }
 }
 </style>

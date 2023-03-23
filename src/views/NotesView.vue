@@ -15,7 +15,12 @@
           @click="toggleShowNewNoteInput" 
           class="is-clickable has-text-grey"
         >
-          {{showNewNoteInput ? 'Close' : '+ New Note'}}
+          <span v-if="showNewNoteInput" class="icon">
+            <i class="fa-solid fa-minus"></i>
+          </span>
+          <span v-else>
+            + New Note
+          </span>
         </span>
       </div>
       <div v-show="showNewNoteInput" class="has-text-centered">
@@ -26,7 +31,11 @@
         >
         </textarea>
         <div class="is-flex is-justify-content-flex-end mt-3">
-          <div class="is-clickable has-text-grey" @click="addNewNote">Done</div>
+          <div class="is-clickable has-text-grey" @click="addNewNote">
+            <span class="icon">
+              <i class="fa-solid fa-plus"></i>
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -45,11 +54,11 @@
       />
     </div>
 
-    <div class="has-text-centered">
-      <span 
-        class="is-clickable" 
-        @click="$router.go(-1)"
-      >Back</span>
+    <div class="has-text-centered" @click="$router.go(-1)">
+      <span class="icon mt-3 is-clickable">
+        <i class="fa-solid fa-caret-left"></i>
+      </span>
+      <span class="is-clickable">Back</span>
     </div>
   </div>
   </div>
