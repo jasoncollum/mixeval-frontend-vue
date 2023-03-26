@@ -3,7 +3,7 @@
     <div v-if="isLoading">
       <div id="loading-audio-message" class="has-text-centered">Loading Audio {{percent}}%</div>
     </div>
-    <div id="waveform"></div>
+    <div id="waveform" v-show="titleAndVersion"></div>
       <div class="is-flex is-flex-direction-row mx-1 mt-5">
         <div v-if="showPlayPause" class="is-clickable" @click="playPause">
           <span v-if="audioPlaying" class="icon is-large">
@@ -13,9 +13,9 @@
             <i class="fa-solid fa-play"></i>
           </span>
         </div>
-      <div v-if="showPlayPause" class="ml-4 my-auto has-text-weight-semibold">
-        {{titleAndVersion}} by {{audioInfo.artistName}}
-      </div>
+        <div v-if="showPlayPause" class="ml-4 my-auto has-text-weight-semibold">
+          {{titleAndVersion}} by {{audioInfo.artistName}}
+        </div>
     </div>
   </div>
 </template>

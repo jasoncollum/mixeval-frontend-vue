@@ -5,8 +5,8 @@
   <div id="audio-player-and-views" class="pt-4 px-4" :class="{'views-margin': username}">
     <AudioPlayer />
     <div>
-    <router-view />
-  </div>
+        <router-view />
+    </div>
   </div>
 </div>
 </template>
@@ -40,14 +40,26 @@ export default defineComponent({
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
-  /* color: #2c3e50; */
   min-height: 100vh;
+  min-width: 100vw;
 }
 #views {
   /* padding-top: 15px; */
 }
 .views-margin {
   margin-left: 340px;
+}
+
+/* For mobile phones: */
+@media (max-width: 768px) {
+  .views-margin {
+    margin-left: 0;
+  }
+}
+/* For tablets: */
+@media (max-width: 1023px) {
+  .views-margin {
+    margin-left: 0;
+  }
 }
 </style>
