@@ -47,6 +47,9 @@ export default defineComponent({
 </script>
 
 <style>
+.card-container {
+  width: 300px;
+}
 .card-container:hover {
   cursor: pointer;
   background-color: rgb(248, 247, 247);

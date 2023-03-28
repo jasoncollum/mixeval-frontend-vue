@@ -1,47 +1,41 @@
-<template>
-  <aside v-show="username" class="menu sidebar has-background-white pt-4 pl-4">
+<template id="template">
+  <aside v-show="username" id="sidebar" class="menu has-background-white pt-5 px-4">
     <!-- top panel container -->
     <div>
-      <div class="mb-2">
-        <router-link to="/profile">
-          <span class="icon">
-            <i class="fa-regular fa-user"></i>
-          </span>
-          <span class="ml-1">{{username}}</span>
-        </router-link>
+      <div class="mb-2 is-clickable" @click="$router.push('/profile')">
+        <span class="icon">
+          <i class="fa-regular fa-user"></i>
+        </span>
+        <span class="ml-1">{{username}}</span>
       </div>
-      <div class="mb-2">
+      <div class="mb-2 is-clickable" @click="$router.push('/')">
         <span class="icon">
             <i class="fa-solid fa-magnifying-glass"></i>
           </span>
           <span class="ml-1">Search</span>
       </div>
-      <div class="mb-2">
-        <router-link to="/create-artist">
-          <span class="icon">
-            <i class="fa-solid fa-plus"></i>
-          </span>
-          <span class="ml-1">Create Artist</span>
-        </router-link>
+      <div class="mb-2 is-clickable" @click="$router.push('/create-artist')">
+        <span class="icon">
+          <i class="fa-solid fa-plus"></i>
+        </span>
+        <span class="ml-1">Create Artist</span>
       </div>
-      <div class="mb-2">
-        <router-link to="/create-song">
-          <span class="icon">
-            <i class="fa-solid fa-plus"></i>
-          </span>
-          <span class="ml-1">Create Song</span>
-        </router-link>
+      <div class="mb-2 is-clickable" @click="$router.push('/create-song')">
+        <span class="icon">
+          <i class="fa-solid fa-plus"></i>
+        </span>
+        <span class="ml-1">Create Song</span>
       </div>
       <hr>
       <!-- <div class="top-panel-item">Open Songs</div> -->
-      <div class="has-text-centered my-2">
+      <div class="has-text-centered my-2 mb-3">
         <span @click="listArtists" 
               class="artists-songs-spans mr-1" 
-              :class="{'selected': selectArtists}">Artists
+              :class="{'faded': !selectArtists}">Artists
         </span> | <span 
               @click="listSongs" 
               class="artists-songs-spans ml-1"
-              :class="{'selected': selectSongs}">Songs
+              :class="{'faded': !selectSongs}">Songs
         </span>
       </div>
     </div>
@@ -53,6 +47,7 @@
         :artistName="artist.name" 
         :artistImage="artist.image_url" 
         :artistSongCount="artist.songs.length"
+        @click="handleArtistCardClick(artist.id)"
       />
     </div>
     <div v-else>
@@ -112,6 +107,9 @@ export default defineComponent({
       this.selectSongs = false;
       this.selectArtists = true;
     },
+    handleArtistCardClick(id: string): void {
+      this.$router.push(`/artist/${id}/details`);
+    },
     handleSongCardClick(id: string): void {
       this.$router.push(`/song/${id}`);
     },
@@ -119,17 +117,31 @@ export default defineComponent({
 })
 </script>
 
-<style>
-.sidebar {
+<style scoped>
+#sidebar {
   position: fixed;    
   height: 100vh;
   width: 340px;
+  overflow: auto;
   border-right: 1px solid lightgray;
 }
 .artists-songs-spans:hover {
   cursor: pointer;
 }
-.selected {
-  color: #42b983;
+.faded {
+  color: rgb(184, 182, 182);
+}
+
+/* For mobile phones: */
+@media (max-width: 768px) {
+  #sidebar {
+    display: none !important;
+  }
+}
+/* For tablets: */
+@media (max-width: 1023px) {
+  #sidebar {
+    display: none !important;
+  }
 }
 </style>
