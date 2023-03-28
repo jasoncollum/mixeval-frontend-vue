@@ -1,5 +1,5 @@
 <template>
-  <div v-show="username" id="audio-player">
+  <div v-show="username" id="audio-player" class="mb-5">
     <div v-if="isLoading">
       <div id="loading-audio-message" class="has-text-centered">Loading Audio {{percent}}%</div>
     </div>

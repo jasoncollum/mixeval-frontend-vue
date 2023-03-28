@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar is-transparent">
+  <!-- <nav class="navbar is-transparent is-hidden-touch">
     
     <div class="navbar-end">
       <select class="orderby-select">
@@ -8,7 +8,7 @@
         <option>Artist Name</option>
       </select>
     </div>
-  </nav>
+  </nav> -->
 
   <!-- New Version Form -->
   <div v-if="showForm">

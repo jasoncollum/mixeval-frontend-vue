@@ -17,15 +17,15 @@
     </div>
     <div 
       v-if="username" 
-      class="navbar-menu sidebar-links has-text-centered" 
-      :class="{'is-active': isActive}" 
+      class="navbar-menu has-text-centered" 
+      :class="{'is-active': isActive, 'has-background-light': isActive}" 
       @click="toggleBurger">
-      <div class="navbar-start">
+      <div class="navbar-start is-hidden-desktop">
         <router-link to="/profile" class="navbar-item">{{username}}</router-link>
         <router-link to="/" class="navbar-item">Search</router-link>
         <router-link to="/create-artist" class="navbar-item">Create Artist</router-link>
         <router-link to="/create-song" class="navbar-item">Create Song</router-link>
-        <router-link to="/" class="navbar-item">Artists</router-link>
+        <router-link to="/artists" class="navbar-item">Artists</router-link>
         <router-link to="/" class="navbar-item">Songs</router-link>
       </div>
       <div class="navbar-end">
@@ -65,20 +65,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.sidebar-links {
-  visibility: hidden;
-}
 
-/* For mobile phones: */
-@media (max-width: 768px) {
-  .sidebar-links {
-    visibility: visible;
-  }
-}
-/* For tablets: */
-@media (max-width: 1023px) {
-  .sidebar-links {
-    visibility: visible;
-  }
-}
 </style>
