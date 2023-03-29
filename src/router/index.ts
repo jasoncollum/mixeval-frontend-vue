@@ -8,6 +8,7 @@ import Artists from '../views/Artists.vue'
 import CreateSong from '../views/CreateSong.vue'
 import SongDetails from '../views/SongDetails.vue'
 import SongEdit from '../views/SongEdit.vue'
+import Songs from '../views/Songs.vue'
 import VersionEdit from '../views/VersionEdit.vue'
 import SignupForm from '../views/SignupForm.vue'
 import SigninForm from '../views/SigninForm.vue'
@@ -106,6 +107,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/song/:id/edit',
     name: 'songEdit',
     component: SongEdit,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/songs',
+    name: 'songs',
+    component: Songs,
     meta: {
       requiresAuth: true
     },

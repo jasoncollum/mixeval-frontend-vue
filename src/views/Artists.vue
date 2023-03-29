@@ -1,20 +1,19 @@
 <template>
-  <div>
-    <ArtistSongCard
-      class="artist-list-card" 
-      v-for="artist in artists"
-      :key="artist.id" 
-      :artistName="artist.name" 
-      :artistImage="artist.image_url" 
-      :artistSongCount="artist.songs.length"
-      @click="handleArtistCardClick(artist.id)"
-    />
-  </div>
+  <ArtistSongCard
+    class="artist-list-card" 
+    v-for="artist in artists"
+    :key="artist.id" 
+    :artistName="artist.name" 
+    :artistImage="artist.image_url" 
+    :artistSongCount="artist.songs.length"
+    @click="handleArtistCardClick(artist.id)"
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ArtistSongCard from '../components/ArtistSongCard.vue'
+import ArtistSongCard from '../components/ArtistSongCard.vue';
+
 export default defineComponent({
   name: 'Artists',
   components: {
