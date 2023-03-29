@@ -2,12 +2,13 @@
   <nav class="navbar is-transparent is-fixed-top has-shadow px-1">
     <div class="navbar-brand">
       <router-link to="/" class="navbar-item">MIXEVAL</router-link>
-      <a 
+      <a
+        v-if="username" 
         role="button" 
         class="navbar-burger has-background-white" 
         aria-label="menu" 
         aria-expanded="false"
-        :class="{'is-active': isActive}" 
+        :class="{'is-active': isActive}"
         @click="toggleBurger"
       >
         <span aria-hidden="true"></span>
@@ -18,8 +19,8 @@
     <div 
       v-if="username" 
       class="navbar-menu has-text-centered" 
-      :class="{'is-active': isActive, 'has-background-light': isActive}" 
-      @click="toggleBurger">
+      :class="{'is-active': isActive}" 
+    >
       <div class="navbar-start is-hidden-desktop">
         <router-link to="/profile" class="navbar-item">{{username}}</router-link>
         <router-link to="/" class="navbar-item">Search</router-link>
@@ -29,7 +30,7 @@
         <router-link to="/songs" class="navbar-item">Songs</router-link>
       </div>
       <div class="navbar-end">
-        <router-link to="/signin" class="navbar-item" @click="logout">
+        <router-link to="/signin" class="navbar-item" @click="handleLogout">
           Log Out
         </router-link>
       </div>
@@ -56,7 +57,7 @@ export default defineComponent({
     toggleBurger() {
       this.isActive = !this.isActive;
     },
-    logout() {
+    handleLogout() {
       this.$store.dispatch('logoutUser');
       this.$router.push('/signin');
     },
@@ -64,6 +65,6 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style>
 
 </style>
