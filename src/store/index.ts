@@ -15,6 +15,7 @@ const store = createStore({
     playAudio: false as boolean,
     audioPlaying: false as boolean,
     audioInfo: {
+      artistId: '',
       artistName: '',
       songTitle: '',
       versionId: '',
@@ -47,6 +48,7 @@ const store = createStore({
       state.playAudio = false;
       state.audioPlaying = false;
       state.audioInfo = {
+        artistId: '',
         artistName: '',
         songTitle: '',
         versionId: '',

@@ -11,8 +11,8 @@ export const s3 = new aws.S3({
   region: process.env.VUE_APP_AWS_REGION,
 })
 
-export const audioFileUpload = async (file: any, username: string, artistName: string, songTitle: string) => {
-  const key = `${username}/${artistName}/${songTitle}/${file.name}`.replace(/ /g,'_');
+export const audioFileUpload = async (artistId: string, file: any) => {
+  const key = `${artistId}_${file.name}`.replace(/ /g,'_');
   const params = {
     Bucket: process.env.VUE_APP_AWS_BUCKET,
     Key: key,
@@ -30,12 +30,8 @@ export const audioFileUpload = async (file: any, username: string, artistName: s
   } 
 }
 
-export const getAudioFile = async (
-  username: string, 
-  artistName: string, 
-  songTitle: string, 
-  audioFileName: string) => {
-  const key = `${username}/${artistName}/${songTitle}/${audioFileName}`.replace(/ /g,'_');
+export const getAudioFile = async (artistId: string, audioFileName: string) => {
+  const key = `${artistId}_${audioFileName}`.replace(/ /g,'_');
   const params = {
     Bucket: process.env.VUE_APP_AWS_BUCKET,
     Key: key,
