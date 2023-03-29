@@ -4,6 +4,7 @@ import UserProfile from '../views/UserProfile.vue'
 import CreateArtist from '../views/CreateArtist.vue'
 import ArtistDetails from '../views/ArtistDetails.vue'
 import ArtistEdit from '../views/ArtistEdit.vue'
+import Artists from '../views/Artists.vue'
 import CreateSong from '../views/CreateSong.vue'
 import SongDetails from '../views/SongDetails.vue'
 import SongEdit from '../views/SongEdit.vue'
@@ -63,6 +64,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/artist/:id/edit',
     name: 'artistEdit',
     component: ArtistEdit,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/artists',
+    name: 'artists',
+    component: Artists,
     meta: {
       requiresAuth: true
     },
