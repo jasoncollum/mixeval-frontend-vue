@@ -87,9 +87,7 @@ export default defineComponent({
         // load wavesurfer audio
         this.isLoading = true;
         const url = await getAudioFile(
-          this.username, 
-          this.audioInfo.artistName, 
-          this.audioInfo.songTitle, 
+          this.audioInfo.artistId,
           this.audioInfo.audioFileName
         );
         this.wavesurfer.load(url);

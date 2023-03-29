@@ -60,10 +60,8 @@ export default defineComponent({
         // Upload audio file to aws s3 bucket
         if (this.selectedFile && this.selectedFile.type === 'audio/mpeg') {
           this.isUploading = true;
-          const username = this.$store.state.username;
-          const artistName = this.song.artistName;
-          const songTitle = this.song.title;
-          const result = await audioFileUpload(this.selectedFile, username, artistName, songTitle);
+          const artistId = this.song.artistId;
+          const result = await audioFileUpload(artistId, this.selectedFile);
 
           if (result && result.statusText === 'OK') {
             // Patch request to Update Version audioFileName

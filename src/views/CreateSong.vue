@@ -4,7 +4,7 @@
     <div class="has-text-centered">Create A New Song</div>
 
     <label>Artist:</label>
-    <select v-model="selected" required @change="handleNewArtist">
+    <select v-model="selectedArtist" required @change="handleNewArtist">
       <option text='Choose an artist' :value="{id: '', name: ''}" disabled></option>
       <option text='Create a new artist' :value="{id: 'create-new-artist', name: ''}"></option>
       <option v-for="artist in artistList" :value="{id: artist.id, name: artist.name}" :key="artist.id">
@@ -38,7 +38,7 @@
 
     <div class="is-size-7 has-text-centered">
       <router-link to="/" class="link" @click="handleCreateSongLater">
-        {{ (previousPath === '/create-artist' && selected.id) ? 'Create A Song Later' : 'Cancel' }}
+        {{ (previousPath === '/create-artist' && selectedArtist.id) ? 'Create A Song Later' : 'Cancel' }}
       </router-link>
     </div>
   </form>
@@ -58,7 +58,7 @@ export default defineComponent({
   data() {
     return {
       title: '',
-      selected: {id: '', name: ''},
+      selectedArtist: {id: '', name: ''},
       artistList: [] as ArtistDetail[],
       selectedFile: null as any,        // <= TYPESCRIPT selectedFile
       previousPath: '',
@@ -94,16 +94,16 @@ export default defineComponent({
         if (this.selectedFile && this.selectedFile.type === 'audio/mpeg') {
           this.isUploading = true;
           const username = this.$store.state.username;
-          const artistName = this.selected.name;
+          const artistName = this.selectedArtist.name;
           const songTitle = this.title;
-          const result = await audioFileUpload(this.selectedFile, username, artistName, songTitle);
+          const result = await audioFileUpload(this.selectedArtist.id, this.selectedFile);
           
           if (result && result.statusText === 'OK') {
             // Post request to create new song in db (as well as create version 1)
             const token = localStorage.getItem('token');
             const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/songs`, {
               title: this.title,
-              artistId: this.selected.id,
+              artistId: this.selectedArtist.id,
               isOpen: true,
               audioFileNameForVersion: this.selectedFile.name
               },
@@ -118,8 +118,8 @@ export default defineComponent({
             this.$store.commit('setNewArtistId', '');
             this.isUploading = false;
             this.title = '';
-            this.selected.id = '';
-            this.selected.name = '';
+            this.selectedArtist.id = '';
+            this.selectedArtist.name = '';
             this.artistList = [];
             this.$router.push(`/song/${createdSong.id}`);
           }
@@ -131,7 +131,7 @@ export default defineComponent({
       }
     },
     handleNewArtist() {
-      if (this.selected.id === 'create-new-artist') {
+      if (this.selectedArtist.id === 'create-new-artist') {
         this.$store.commit('setNewArtistId', '');
         this.$router.push('/create-artist');
       }
@@ -142,7 +142,7 @@ export default defineComponent({
   },
   async mounted() {
     await this.getArtistsDetails();
-    this.selected.id = this.$store.state.newArtistId;
+    this.selectedArtist.id = this.$store.state.newArtistId;
     this.previousPath = this.$router.options.history.state.back as string;
   },
 });

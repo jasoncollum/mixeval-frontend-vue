@@ -115,6 +115,7 @@ export default defineComponent({
       this.$store.dispatch('playFromSongCard', {
         titleAndVersion: `${this.songTitle} MIX V${this.versionNumber}`,
         audioInfo: {
+          artistId: this.artistId,
           artistName: this.artistName,
           songTitle: this.songTitle,
           versionId: this.versionId,

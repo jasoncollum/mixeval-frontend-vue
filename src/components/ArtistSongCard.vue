@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
 <template>
   <div class="card-container is-flex">
-    <figure class="image is-48x48 is-clipped mx-1 my-1">
+    <figure class="image is-48x48 is-clipped my-1">
       <!-- <img v-if="artistImage" :src="artistImage" /> -->
       <img src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
     </figure>
@@ -48,7 +48,7 @@ export default defineComponent({
 
 <style>
 .card-container {
-  width: 300px;
+  width: 307px;
 }
 .card-container:hover {
   cursor: pointer;
