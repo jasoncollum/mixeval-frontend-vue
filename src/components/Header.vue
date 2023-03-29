@@ -26,7 +26,7 @@
         <router-link to="/create-artist" class="navbar-item">Create Artist</router-link>
         <router-link to="/create-song" class="navbar-item">Create Song</router-link>
         <router-link to="/artists" class="navbar-item">Artists</router-link>
-        <router-link to="/" class="navbar-item">Songs</router-link>
+        <router-link to="/songs" class="navbar-item">Songs</router-link>
       </div>
       <div class="navbar-end">
         <router-link to="/signin" class="navbar-item" @click="logout">
