@@ -1,5 +1,5 @@
 <template id="template">
-  <aside v-show="username" id="sidebar" class="menu has-background-white pt-5 px-4">
+  <aside v-show="username" id="sidebar" class="menu has-background-white pt-5 px-4 is-hidden-touch">
     <!-- top panel container -->
     <div>
       <div class="mb-2 is-clickable" @click="$router.push('/profile')">
@@ -130,18 +130,5 @@ export default defineComponent({
 }
 .faded {
   color: rgb(184, 182, 182);
-}
-
-/* For mobile phones: */
-@media (max-width: 768px) {
-  #sidebar {
-    display: none !important;
-  }
-}
-/* For tablets: */
-@media (max-width: 1023px) {
-  #sidebar {
-    display: none !important;
-  }
 }
 </style>

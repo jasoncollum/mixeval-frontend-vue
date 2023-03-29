@@ -1,5 +1,5 @@
 <template>
-  <div class="is-flex is-flex-wrap-wrap is-justify-content-space-between">
+  <div>
     <ArtistSongCard
       class="artist-list-card" 
       v-for="artist in artists"
@@ -38,6 +38,9 @@ export default defineComponent({
 
 <style scoped>
 .artist-list-card {
-  width: 340px;
+  width: 100%;
+}
+.artist-list-card:nth-of-type(odd) {
+  background-color: rgb(248, 247, 247);
 }
 </style>
