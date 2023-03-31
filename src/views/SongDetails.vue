@@ -1,7 +1,11 @@
 <template>
   <div id="song-details" class="mt-6">
     <div class="container details is-flex is-flex-direction-row is-justify-content-center">
-      <img :src="song.artistImage" class="artist-image"/>
+      <img 
+        :src="song.artistImage ? song.artistImage : defaultArtistImage" 
+        :key="song.artistImage" 
+        class="artist-image"
+      />
       <div class="ml-6 is-size-4 mt-5">
         <h1>{{song.artistName}}</h1>
         <h2 class="mt-4">{{song.title}}</h2>
@@ -33,6 +37,7 @@ export default defineComponent({
   data() {
     return{
       showEdit: false,
+      defaultArtistImage: process.env.VUE_APP_DEFAULT_ARTIST_IMAGE,
     }
   },
   computed: {
