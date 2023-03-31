@@ -2,7 +2,7 @@ import { defineComponent } from 'vue';
 <template>
   <div id="artist-details" class="mt-6">
     <div class="container details is-flex is-flex-direction-row is-justify-content-center">
-      <img :src="artist.image_url" class="artist-image"/>
+      <img :src="artist.image_url ? artist.image_url : defaultArtistImage" :key="artist.image_url" class="artist-image"/>
       <div class="ml-6 is-size-4 mt-5">
         <h1>{{artist.name}}</h1>
         <p class="is-size-6 mt-4">
@@ -32,7 +32,7 @@ export default defineComponent({
   name: 'ArtistDetails',
   data() {
     return {
-
+      defaultArtistImage: process.env.VUE_APP_DEFAULT_ARTIST_IMAGE,
     }
   },
   computed: {

@@ -6,7 +6,6 @@
   >
     <div class="card-container is-flex">
       <figure class="image is-48x48 is-clipped mx-1 my-1">
-        <!-- <img v-if="artistImage" :src="artistImage"/> -->
         <span v-if="audioInfo.versionId === versionId && audioPlaying && !hover" class="eq">
           <span class="bar bar-1"></span>
           <span class="bar bar-2"></span>
@@ -14,7 +13,8 @@
           <span class="bar bar-4"></span>
         </span>
         <img v-else-if="!hover"
-          src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" 
+          :src="artistImage ? artistImage : defaultArtistImage"
+          :key="artistImage"
         />
         <span v-show="(!audioPlaying && hover) || (audioInfo.versionId !== versionId && hover)"
           class="icon is-large" 
@@ -88,6 +88,7 @@ export default defineComponent({
   data() {
     return {
       hover: false,
+      defaultArtistImage: process.env.VUE_APP_DEFAULT_ARTIST_IMAGE,
     }
   },
   computed: {

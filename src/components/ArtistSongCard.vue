@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
   <div class="card-container is-flex">
     <figure class="image is-48x48 is-clipped my-1">
       <!-- <img v-if="artistImage" :src="artistImage" /> -->
-      <img src="https://thumbs.dreamstime.com/b/disco-mannequin-27120553.jpg" />
+      <img :src="artistImage ? artistImage : defaultArtistImage" :key="artistImage" />
     </figure>
     <div v-if="songTitle" class="mx-1 my-1">
       <p class="top-line is-size-6">{{songTitle}}</p>
@@ -41,6 +41,11 @@ export default defineComponent({
     songTitle: {
       required: false,
       type: String
+    }
+  },
+  data() {
+    return {
+      defaultArtistImage: process.env.VUE_APP_DEFAULT_ARTIST_IMAGE,
     }
   }
 })
