@@ -10,6 +10,10 @@ const store = createStore({
     username: '',
     artists: [] as Artist[],
     newArtistId: '',
+    notification: {
+      type: 'danger' as string | null,
+      message: 'Something went wrong.' as string | null
+    },
     // *** audio info + controls ***
     titleAndVersion: '',
     playAudio: false as boolean,
@@ -64,6 +68,9 @@ const store = createStore({
     setPlayAudio(state, payload) {
         state.playAudio = payload;
         state.audioPlaying = payload;
+    },
+    setNotification(state, payload) {
+      state.notification = payload;
     },
   },
   actions: {
