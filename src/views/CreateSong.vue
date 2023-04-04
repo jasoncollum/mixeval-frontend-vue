@@ -7,7 +7,7 @@
     <select v-model="selectedArtist" required @change="handleNewArtist">
       <option text='Choose an artist' :value="{id: '', name: ''}" disabled></option>
       <option text='Create a new artist' :value="{id: 'create-new-artist', name: ''}"></option>
-      <option v-for="artist in artistList" :value="{id: artist.id, name: artist.name}" :key="artist.id">
+      <option v-for="artist in artistList" :text="artist.name" :value="{id: artist.id, name: artist.name}" :key="artist.id">
         {{ artist.name }}
       </option>
     </select>
@@ -114,20 +114,26 @@ export default defineComponent({
               }
             )
             const createdSong: Song = response.data;
-            this.$store.dispatch('requestArtistsWithOpenSongs');
-            this.$store.commit('setNewArtistId', '');
-            this.isUploading = false;
-            this.title = '';
-            this.selectedArtist.id = '';
-            this.selectedArtist.name = '';
-            this.artistList = [];
-            this.$router.push(`/song/${createdSong.id}`);
+
+            if (createdSong) {
+              this.$store.dispatch('requestArtistsWithOpenSongs');
+              this.$store.commit('setNewArtistId', '');
+              this.isUploading = false;
+              this.title = '';
+              this.selectedArtist.id = '';
+              this.selectedArtist.name = '';
+              this.artistList = [];
+              this.$router.push(`/song/${createdSong.id}`);
+            }
           }
         }
       } catch (error: any) {
-        // IMPROVE ERROR HANDLING
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
         this.isUploading = false;
-        console.log(error.response.data.message)
       }
     },
     handleNewArtist() {
@@ -142,7 +148,13 @@ export default defineComponent({
   },
   async mounted() {
     await this.getArtistsDetails();
-    this.selectedArtist.id = this.$store.state.newArtistId;
+    const newArtistId = this.$store.state.newArtistId;
+    if (newArtistId) {
+      const newArtist = this.artistList.find(artist => artist.id === newArtistId);
+      if (newArtist) {
+        this.selectedArtist = newArtist;
+      }
+    }
     this.previousPath = this.$router.options.history.state.back as string;
   },
 });

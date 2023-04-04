@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
 <template>
   <div class="card-container is-flex">
-    <figure class="image is-48x48 is-clipped my-1">
+    <figure class="image is-48x48 is-clipped mx-1 my-1">
       <!-- <img v-if="artistImage" :src="artistImage" /> -->
       <img :src="artistImage ? artistImage : defaultArtistImage" :key="artistImage" />
     </figure>

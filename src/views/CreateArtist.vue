@@ -38,21 +38,32 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('token')
         const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/artists`,
-        {
-          name: this.name,
-          image_url: this.image_url
-        }, 
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`
+          {
+            name: this.name,
+            image_url: this.image_url
+          }, 
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
           }
-        }
-      )
+        )
         const newArtistId = response.data.id as string
-        this.$store.commit('setNewArtistId', newArtistId)
-        this.$router.push('/create-song')
+        if (newArtistId) {
+          // Success notification
+          this.$store.commit('setNotification', {
+            type: 'success',
+            message: 'New artist created'
+          })
+          this.$store.commit('setNewArtistId', newArtistId)
+          this.$router.push('/create-song')
+        }
       } catch(error: any) {
-        console.log(error.response.data.message)
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
       }
     },
   }

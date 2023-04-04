@@ -50,12 +50,14 @@ export default defineComponent({
         console.log(error.response.data.message)
       }
 
-      try {
+      if (this.$store.state.username) {
+        try {
         this.$store.dispatch('requestArtistsWithOpenSongs')
-      } catch (error: any) {
-        console.log(error.response.data.message)
+        } catch (error: any) {
+          console.log(error.response.data.message)
+        }
+        this.$router.push('/');
       }
-      this.$router.push({ path: '/'})
     }
   }
 });

@@ -67,6 +67,7 @@
 import { defineComponent } from 'vue';
 import SongCard from '../components/SongCard.vue'
 import SongWithArtist from '@/types/SongWithArtist';
+import Version from '@/types/Version';
 import { audioFileUpload, getAudioFile } from '../aws';
 import axios from 'axios';
 
@@ -118,14 +119,22 @@ export default defineComponent({
                 }
               }
             )
-            this.$store.dispatch('requestArtistsWithOpenSongs');
-            this.isUploading = false;
+
+            const newVersion: Version = response.data;
+            if (newVersion) {
+              this.$store.dispatch('requestArtistsWithOpenSongs');
+              this.isUploading = false;
+              this.selectedFile = null;
+            }
           }
         }
-      } catch (error) {
-        // IMPROVE ERROR HANDLING
+      } catch (error: any) {
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
         this.isUploading = false;
-        console.log(error)
       }
       this.showForm = false;
     },
