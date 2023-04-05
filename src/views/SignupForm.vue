@@ -9,7 +9,6 @@
     
     <label>Password:</label>
     <input type="password" required v-model="password" />
-    <div v-if="passwordError" class="error">{{ passwordError }}</div>
 
     <div class="submit">
       <button class="button is-rounded">Sign Up</button>
@@ -17,6 +16,9 @@
     <div class="is-size-7 has-text-centered">
       <router-link to="/signin" class="link">Sign In</router-link>
     </div>
+    <ul v-show="hasError">
+       <li v-for="message in errorMessages" :key="message.index" class="has-text-danger my-4">{{message}}</li>
+    </ul>
   </form>
 </template>
 
@@ -32,24 +34,33 @@ export default defineComponent({
       username: '',
       email: '',
       password: '',
-      passwordError: '',
+      hasError: false,
+      errorMessages: []
     }
   },
   methods: {
-    handleSubmit() {
-      axios.post(`${process.env.VUE_APP_ROOT_API}/auth/signup`, {
-        username: this.username,
-        email: this.email,
-        password: this.password
-      })
-      .then((res: any) => console.log(res))
-      .catch((error: any) => console.log(error))
-      
-      this.username = ''
-      this.email = ''
-      this.password = ''
+    async handleSubmit() {
+      if (this.hasError) {
+        this.hasError = false;
+        this.errorMessages = [];
+      }
+      try {
+        const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/auth/signup`, {
+          username: this.username,
+          email: this.email,
+          password: this.password
+        })
 
-      this.$router.push('/')
+        this.username = '';
+        this.email = '';
+        this.password = '';
+
+        this.$router.push('/')
+      } catch (error: any) {
+        //Error notification
+        this.hasError = true;
+        this.errorMessages = error.response.data.message;
+      }
     }
   }
 });
