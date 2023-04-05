@@ -51,15 +51,21 @@ export default defineComponent({
             }
           }
         )
-      } catch (error) {
-        // IMPROVE ERROR HANDLING
-        console.log(error)
+      } catch (error: any) {
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
       }
       try {
         await this.$store.dispatch('requestArtistsWithOpenSongs');
-      } catch (error) {
-        // IMPROVE ERROR HANDLING
-        console.log(error)
+      } catch (error: any) {
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
       }
       this.$router.go(-1);
     }

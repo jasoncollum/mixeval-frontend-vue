@@ -10,6 +10,10 @@ const store = createStore({
     username: '',
     artists: [] as Artist[],
     newArtistId: '',
+    notification: {
+      type: null as string | null,
+      message: null as string | null
+    },
     // *** audio info + controls ***
     titleAndVersion: '',
     playAudio: false as boolean,
@@ -65,6 +69,9 @@ const store = createStore({
         state.playAudio = payload;
         state.audioPlaying = payload;
     },
+    setNotification(state, payload) {
+      state.notification = payload;
+    },
   },
   actions: {
     playFromSongCard({ commit, state }, payload) {
@@ -79,14 +86,24 @@ const store = createStore({
     },
     async requestArtistsWithOpenSongs(context) {
       const token = localStorage.getItem('token')
-      const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/artists?hasOpenSongs=true`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/artists?hasOpenSongs=true`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
           }
+        )
+        const artists: Artist[] = response.data
+        if (artists) {
+          context.commit('setArtists', artists)
         }
-      )
-      const artists: Artist[] = response.data
-      context.commit('setArtists', artists)
+      } catch (error: any) {
+        //Error notification
+        this.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
+      }
     },
     async logoutUser(context) {
       console.log('LOG OUT')

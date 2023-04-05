@@ -1,5 +1,6 @@
 <template>
   <nav class="navbar is-transparent is-fixed-top has-shadow px-1">
+    <Notification />
     <div class="navbar-brand">
       <router-link to="/" class="navbar-item">MIXEVAL</router-link>
       <a
@@ -40,9 +41,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Notification from './Notification.vue'
 
 export default defineComponent({
   name: 'Header',
+  components: {
+    Notification
+  },
   data() {
     return {
       isActive: false,

@@ -3,6 +3,7 @@ import { Store } from 'vuex'
 import Artist from '@/types/Artist'
 import AudioInfo from '@/types/AudioInfo'
 import SongWithArtist from '@/types/SongWithArtist'
+import Notification from '@/types/Notification'
 
 declare module '@vue/runtime-core' {
   // Declare your own store states.
@@ -10,6 +11,7 @@ declare module '@vue/runtime-core' {
     username: string;
     artists: Artist[];
     newArtistId: string;
+    notification: Notification;
     titleAndVersion: string;
     playAudio: boolean;
     audioPlaying: boolean;

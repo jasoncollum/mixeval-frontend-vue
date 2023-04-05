@@ -83,10 +83,13 @@ export default defineComponent({
             this.$router.push(`/song/${this.song.id}`);
           }
         }
-      } catch (error) {
-        // IMPROVE ERROR HANDLING
+      } catch (error: any) {
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
         this.isUploading = false;
-        console.log(error)
       }
     }
   },

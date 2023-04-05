@@ -94,8 +94,11 @@ export default defineComponent({
 
         this.showPlayPause = true;
       } catch (error) {
-        // IMPROVE ERROR HANDLING
-        console.log(error);
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: 'Something went wrong'
+        })
       }
     }
   },
@@ -155,7 +158,7 @@ export default defineComponent({
 
 <style scoped>
   #audio-player {
-    min-height: 200px;
+    min-height: 176px;
     position: relative;
   }
 

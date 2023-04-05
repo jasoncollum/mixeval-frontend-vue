@@ -50,8 +50,11 @@ export default defineComponent({
         )
         this.artistList = response.data;
       } catch (error: any) {
-        // IMPROVE ERROR HANDLING
-        console.log(error.response.data.message)
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
       }
     },
     async handleUpdateSong() {
@@ -73,15 +76,21 @@ export default defineComponent({
             }
           }
         )
-      } catch (error) {
-        // IMPROVE ERROR HANDLING
-        console.log(error)
+      } catch (error: any) {
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
       }
       try {
         await this.$store.dispatch('requestArtistsWithOpenSongs');
-      } catch (error) {
-        // IMPROVE ERROR HANDLING
-        console.log(error)
+      } catch (error: any) {
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
       }
       this.$router.go(-1);
     }

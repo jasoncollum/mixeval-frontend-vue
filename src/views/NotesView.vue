@@ -134,13 +134,16 @@ export default defineComponent({
               }
             }
           )
-          console.log('RESPONSE', response.data)
           this.newNoteText = '';
           this.editedNoteIds.length > 0 && await this.patchEditedNotes();
           this.newRevisionCount > 0 && await this.postNewRevisions();
           await this.$store.dispatch('requestArtistsWithOpenSongs');
         } catch (error: any) {
-          console.log(error.response.data.message)
+          //Error notification
+          this.$store.commit('setNotification', {
+            type: 'error',
+            message: error.response.data.message
+          })
         }
       }
     },
@@ -152,10 +155,12 @@ export default defineComponent({
           // filter editedNoteIds to REMOVE noteId from array
           this.editedNoteIds = this.editedNoteIds.filter(id => id !== noteId);
         } catch (error: any) {
-          console.log(error.response.data.message)
+          //Error notification
+          this.$store.commit('setNotification', {
+            type: 'error',
+            message: error.response.data.message
+          })
         }
-      // REMOVE note from versionNotes array
-      // this.removeNoteFromVersionNotes(noteId);
       } else {
         // if text search editedNoteIds, if id not found, PUSH id to array
         const idFound = this.editedNoteIds.find(id => id === noteId);
@@ -176,7 +181,11 @@ export default defineComponent({
         )
         this.hasDeletedNotes = true;
       } catch (error: any) {
-        console.log(error.response.data.message)
+        //Error notification
+          this.$store.commit('setNotification', {
+            type: 'error',
+            message: error.response.data.message
+          })
       }
       // REMOVE note from versionNotes array
       this.removeNoteFromVersionNotes(noteId);
@@ -211,7 +220,11 @@ export default defineComponent({
             }
           )
         } catch(error: any) {
-          console.log(error.response.data.message)
+          //Error notification
+          this.$store.commit('setNotification', {
+            type: 'error',
+            message: error.response.data.message
+          })
         }
       }
       return hasEditedNotes;
@@ -244,7 +257,11 @@ export default defineComponent({
             // filter editedRevisionIds to REMOVE revisionId from array
             this.editedRevisionIds = this.editedRevisionIds.filter(obj => obj.id !== revisionId);
           } catch (error: any) {
-            console.log(error.response.data.message)
+            //Error notification
+            this.$store.commit('setNotification', {
+              type: 'error',
+              message: error.response.data.message
+            })
           }
         }
         // REMOVE revision from versionNotes array
@@ -272,7 +289,6 @@ export default defineComponent({
           note.revisions.splice(index, 1);
         }
       }
-      console.log('Updated versionNotes', this.versionNotes)
     },
     async handleDeletedRevision({revisionId, noteId}: {revisionId: string, noteId: string}) {
       // if revision is not a new revision - delete revision
@@ -288,7 +304,11 @@ export default defineComponent({
           )
           this.hasDeletedRevisions = true;
         } catch (error: any) {
-          console.log(error.response.data.message)
+          //Error notification
+          this.$store.commit('setNotification', {
+            type: 'error',
+            message: error.response.data.message
+          })
         }
       }
       // remove deleted revision from versionNotes array
@@ -321,7 +341,11 @@ export default defineComponent({
             }
           )
         } catch(error: any) {
-          console.log(error.response.data.message)
+          //Error notification
+          this.$store.commit('setNotification', {
+            type: 'error',
+            message: error.response.data.message
+          })
         }
       }
       return hasNewRevisions;
@@ -358,7 +382,11 @@ export default defineComponent({
             }
           )
         } catch(error: any) {
-          console.log(error.response.data.message)
+          //Error notification
+          this.$store.commit('setNotification', {
+            type: 'error',
+            message: error.response.data.message
+          })
         }
       }
       return hasEditedRevisions;
@@ -386,7 +414,6 @@ export default defineComponent({
           this.versionNotes = [...version.notes];
           this.showNewNoteInput = this.versionNotes.length < 1;
         }
-      console.log('INSIDE THE WATCH')
       }
     }
   },
@@ -404,7 +431,11 @@ export default defineComponent({
       try {
         await this.$store.dispatch('requestArtistsWithOpenSongs')
       } catch (error: any) {
-        console.log(error.response.data.message)
+        //Error notification
+        this.$store.commit('setNotification', {
+          type: 'error',
+          message: error.response.data.message
+        })
       }
     }
     next();
