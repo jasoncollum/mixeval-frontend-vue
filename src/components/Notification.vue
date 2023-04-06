@@ -1,11 +1,16 @@
 <template>
   <div v-if="notification.type" 
-    class="banner has-text-weight-semibold is-overlay has-text-centered pt-3"
+    class="banner has-text-weight-semibold is-overlay"
     :class="notification.type === 'success' ? [`has-background-success-light`, `has-text-success`, `fade-out`] : [`has-background-danger-light`, `has-text-danger`]"
   >
-    <div class="message-container">
-      <span class="notification-message">{{notification.message}}</span>
-      <span v-if="notification.type === 'error'" class="icon is-clickable is-text-danger" @click="closeNotification">
+    <div class="message-container is-flex has-text-centered is-justify-content-center is-align-items-center">
+      <span v-if="notification.type === 'success'" class="notification-message">
+        {{notification.message}}
+      </span>
+      <span v-else class="notification-message is-clickable" @click="closeNotification">
+        {{notification.message}}
+      </span>
+      <span v-if="notification.type === 'error'" class="icon is-clickable is-text-danger is-hidden-mobile" @click="closeNotification">
         <i class="fa-regular fa-circle-xmark"></i>
       </span>
     </div>
@@ -52,13 +57,14 @@ export default defineComponent({
 }
 .message-container {
   position: relative;
+  height: 95%;
 }
-.notification-message {
-  margin-top: auto;
-}
+
 .icon {
   position: absolute;
+  top: 14px;
   right: 15px;
+  z-index: 3;
 }
 .fade-out {
   animation: fadeOut ease 2s;
@@ -106,6 +112,13 @@ export default defineComponent({
   }
   100% {
     opacity:0;
+  }
+}
+
+/* For mobile phones: */
+@media (max-width: 768px) {
+  .banner {
+    padding-top: 3px;
   }
 }
 </style>
