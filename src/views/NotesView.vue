@@ -1,66 +1,66 @@
 <template>
   <div class="my-4">
     <div class="container">
-    <div class="mb-5">
-      <div class="has-text-centered" v-if="song && versionNum">
-        {{song.title}} MIX V{{versionNum}} by {{song.artistName}}
+      <div class="mb-5">
+        <div class="has-text-centered" v-if="song && versionNum">
+          {{song.title}} MIX V{{versionNum}} by {{song.artistName}}
+        </div>
+        <p class="has-text-centered">Client Notes | Mix Revisions</p>
       </div>
-      <p class="has-text-centered">Client Notes | Mix Revisions</p>
-    </div>
 
-    <!-- Create New Note textarea -->
-    <div class="has-text-centered">
-      <div class="mb-3">
-        <span 
-          @click="toggleShowNewNoteInput" 
-          class="is-clickable has-text-grey"
-        >
-          <span v-if="showNewNoteInput" class="icon">
-            <i class="fa-solid fa-minus"></i>
-          </span>
-          <span v-else>
-            + New Note
-          </span>
-        </span>
-      </div>
-      <div v-show="showNewNoteInput" class="has-text-centered">
-        <textarea 
-          class="textarea" 
-          v-model="newNoteText" 
-          placeholder="Enter a note..."
-        >
-        </textarea>
-        <div class="is-flex is-justify-content-flex-end mt-3">
-          <div class="is-clickable has-text-grey" @click="addNewNote">
-            <span class="icon">
-              <i class="fa-solid fa-plus"></i>
+      <!-- Create New Note textarea -->
+      <div class="has-text-centered">
+        <div class="mb-3">
+          <span 
+            @click="toggleShowNewNoteInput" 
+            class="is-clickable has-text-grey"
+          >
+            <span v-if="showNewNoteInput" class="icon">
+              <i class="fa-solid fa-minus"></i>
             </span>
+            <span v-else>
+              + New Note
+            </span>
+          </span>
+        </div>
+        <div v-show="showNewNoteInput" class="has-text-centered">
+          <textarea 
+            class="textarea" 
+            v-model="newNoteText" 
+            placeholder="Enter a note..."
+          >
+          </textarea>
+          <div class="is-flex is-justify-content-flex-end mt-3">
+            <div class="is-clickable has-text-grey" @click="addNewNote">
+              <span class="icon">
+                <i class="fa-solid fa-plus"></i>
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Notes section -->
-    <div id="" class="mt-4">
-      <NoteCard 
-        v-for="note in versionNotes"
-        :key="note.id"
-        :note="note"
-        @editedNote="handleEditedNote"
-        @deletedNote="handleDeletedNote"
-        @addNewRevision="handleAddNewRevision"
-        @editedRevision="handleEditedRevision"
-        @deletedRevision="handleDeletedRevision"
-      />
-    </div>
+      <!-- Notes section -->
+      <div v-if="versionNotes" id="" class="mt-4">
+        <NoteCard
+          v-for="note in versionNotes"
+          :key="note.id"
+          :note="note"
+          @editedNote="handleEditedNote"
+          @deletedNote="handleDeletedNote"
+          @addNewRevision="handleAddNewRevision"
+          @editedRevision="handleEditedRevision"
+          @deletedRevision="handleDeletedRevision"
+        />
+      </div>
 
-    <div class="has-text-centered" @click="$router.go(-1)">
-      <span class="icon mt-3 is-clickable">
-        <i class="fa-solid fa-caret-left"></i>
-      </span>
-      <span class="is-clickable">Back</span>
+      <div class="has-text-centered" @click="$router.go(-1)">
+        <span class="icon mt-3 is-clickable">
+          <i class="fa-solid fa-caret-left"></i>
+        </span>
+        <span class="is-clickable">Back</span>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -407,7 +407,12 @@ export default defineComponent({
   watch: {
     song() {
       // check that song is not an empty object
-      if (Object.keys(this.song).length !== 0 && this.song.constructor === Object) {
+      if (
+        this.song !== undefined &&
+        this.song !== null &&
+        Object.keys(this.song).length !== 0 && 
+        this.song.constructor === Object
+        ) {
         const version = this.song.versions.find(version => version.id === this.versionId) as Version;
         if (version) {
           this.versionNum = version.number;
