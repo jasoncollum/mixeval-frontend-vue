@@ -1,6 +1,6 @@
 <template>
   <!-- Edit Version -->
-  <form @submit.prevent="handleUpdateVersion">
+  <form v-if="song" @submit.prevent="handleUpdateVersion">
     <div class="has-text-centered">{{song.title}} MIX V{{versionNumber}}</div>
      <!-- Upload MP3 Audio -->
     <input 

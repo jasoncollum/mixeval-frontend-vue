@@ -62,9 +62,10 @@ export default defineComponent({
     toggleBurger() {
       this.isActive = !this.isActive;
     },
-    handleLogout() {
+    async handleLogout() {
       this.$store.dispatch('logoutUser');
-      this.$router.push('/signin');
+      localStorage.clear();
+      this.$router.push(`/signin`);
     },
   },
 })

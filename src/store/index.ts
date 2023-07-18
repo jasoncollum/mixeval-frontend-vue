@@ -105,9 +105,7 @@ const store = createStore({
         })
       }
     },
-    async logoutUser(context) {
-      console.log('LOG OUT')
-      await localStorage.clear();
+    async logoutUser(context): Promise<void> {
       context.commit('logoutUser');
     }
   },
